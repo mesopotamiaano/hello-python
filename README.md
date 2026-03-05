@@ -14,3 +14,6 @@ pandas CSV作成, read_csv読み込み ,groupby分解,　計算.mean,max,min,cou
 
 3/4
 pandas ブール配列の理解, &/|の基礎結合,  丸括弧が必要な理由, 条件抽出+並び替えの合成, 処理の順番を構造で考える力
+
+3/5
+pandasの欠損地(NaN)の理解, .isna().dropna().fillna()の使い方, fillna()は新しいSeriesを返すため、代入が必要, 列計算で新しい列を作成
