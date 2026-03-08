@@ -20,3 +20,6 @@ pandasの欠損地(NaN)の理解, .isna().dropna().fillna()の使い方, fillna(
 
 3/6
 pandas基礎　平均を出す、　条件抽出,　並び替え、　新しい列を作る、　分析に使う
+
+3/7
+groupby, agg複数集計
