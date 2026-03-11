@@ -27,3 +27,5 @@ groupby, agg複数集計
 value_counts, crosstab二つ項目の関係を見る, 条件抽出, 
 3/10
 SCVファイル作成df.to_csv("sales_data.csv", index=False)保存, CSVファイル読み込みpd.read_csv, データ確認df.head()
+3/11
+.mean(), .max(), .min(). sort_values(), 条件抽出df[条件], groupby()グループ集計
