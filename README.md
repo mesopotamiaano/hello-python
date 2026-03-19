@@ -35,3 +35,8 @@ pandas value_counts, crosstab, print(),if,else,for,～:はブロック開始
 python関数, def/引数/return, 辞書, キーと値,データ取得,データ追加
 3/17
 list,dict  forで一つずつ取り出す, ifで条件分岐, p["キー"]で値を取り出す, count = 0数える準備, count += 1条件に合うものをカウント, データ処理の流れ　データ取り出す条件集計。
+3/18
+listの作成[], appendでデータ追加, count,total,result
+3/19
+Pythonの関数の理解と実装、データ処理を関数としてまとめる練習、合計平均のロジック、returnの動きと重要性、インテスドの理解
+MISS=returnをfor文の前に書いてしまい、一件しか処理されなかった。
