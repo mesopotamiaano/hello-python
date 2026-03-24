@@ -49,3 +49,5 @@ MISS=returnをfor文の前に書いてしまい、一件しか処理されなか
 前回の復習込めてcount人数, total合計 平均点をだした 
 3/23
 ファイル操作（読み込みreadlines）,データ分割（split),例外処理（try/except),条件分岐,リストにデータを保存（append）sum/len
+3/24
+def is_pass true,False判定
