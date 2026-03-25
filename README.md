@@ -51,3 +51,5 @@ MISS=returnをfor文の前に書いてしまい、一件しか処理されなか
 ファイル操作（読み込みreadlines）,データ分割（split),例外処理（try/except),条件分岐,リストにデータを保存（append）sum/len
 3/24
 def is_pass true,False判定
+
+3/25 関数 def calc_average(scores):   return sum(scores) / len(scores) 平均を計算する処理
