@@ -53,3 +53,5 @@ MISS=returnをfor文の前に書いてしまい、一件しか処理されなか
 def is_pass true,False判定
 
 3/25 関数 def calc_average(scores):   return sum(scores) / len(scores) 平均を計算する処理
+
+3/27~31 関数、ファイル操作、例外処理、データ構造、データ処理　parse_lineでコード整理、役割分担
