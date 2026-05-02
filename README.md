@@ -55,3 +55,11 @@ def is_pass true,False判定
 3/25 関数 def calc_average(scores):   return sum(scores) / len(scores) 平均を計算する処理
 
 3/27~31 関数、ファイル操作、例外処理、データ構造、データ処理　parse_lineでコード整理、役割分担
+
+４月まとめ
+python
+for文の反復処理　if/elif/else  変数の更新処理　　count += 1個数を数える　total += scoreで合計を出す　avg = total/ countで合計を計算　条件に合うデータだけを抽出して処理する練習　
+SQL
+SELECT FROM WHERE ORDER BY  COUNT AVG MAX サブクエリ
+Python ＊ SQLの連携
+sqlite3を使って: テーブル作成、データ追加　fetchall()で取得　Pythonでループ処理　SQLで取得したデータをPythonで集計
