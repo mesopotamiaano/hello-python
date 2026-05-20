@@ -63,3 +63,7 @@ SQL
 SELECT FROM WHERE ORDER BY  COUNT AVG MAX サブクエリ
 Python ＊ SQLの連携
 sqlite3を使って: テーブル作成、データ追加　fetchall()で取得　Pythonでループ処理　SQLで取得したデータをPythonで集計
+
+５月～２０日ごろ
+復習SELECT,FROM,WHERE,ORDER BY,COUNT, AVG, サブクエリ,pythonのsqlite3との連携, fetchall()
+Pythonでデータを扱う基礎をした。特に、SQLで扱っていたようなデータを、Pythonのlist,dict で処理する練習を行った。
