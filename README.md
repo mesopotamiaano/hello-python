@@ -75,3 +75,7 @@ studentsのデータに対して関数を使ってgradeを付けた。resultsリ
 
 5/22
 前回作ったget_grade(score)関数を復習した。新しくcreate_result(student)関数を作った。一人分の辞書データを受け取って新しい辞書データに変換した。for文で全員分にcreate_result()を使いresults リストを作った。関数同士のつながりを確認した。
+
+5/25〜27
+Pythonの関数化をさらに進めた。  
+前回までに作った `get_grade()` と `create_result()` を使い、今回は「全員分を処理する関数」と「条件に合う人だけ処理する関数」を作った。
