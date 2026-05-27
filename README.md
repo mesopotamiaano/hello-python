@@ -78,4 +78,5 @@ studentsのデータに対して関数を使ってgradeを付けた。resultsリ
 
 5/25〜27
 Pythonの関数化をさらに進めた。  
-前回までに作った `get_grade()` と `create_result()` を使い、今回は「全員分を処理する関数」と「条件に合う人だけ処理する関数」を作った。
+前回までに作った `get_grade()` と `create_result()` を使い、今回は「全員分を処理する関数」と「条件に合う人だけ処理する関数」を作った。create_passed_results()
+for in if >= 80点以上だけを処理。
