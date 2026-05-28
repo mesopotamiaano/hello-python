@@ -80,3 +80,18 @@ studentsのデータに対して関数を使ってgradeを付けた。resultsリ
 Pythonの関数化をさらに進めた。  
 前回までに作った `get_grade()` と `create_result()` を使い、今回は「全員分を処理する関数」と「条件に合う人だけ処理する関数」を作った。create_passed_results()
 for in if >= 80点以上だけを処理。
+
+5/28
+2026/5/28 学習
+前回までに作った関数を復習した
+新しく is_passed(student)関数を作った
+80点以上かどうかを True / False で返す処理を書いた
+create_passed_results(students)の中で is_passed(student)を使った
+条件に合う人だけをresultsに追加する流れを確認した
+
+使ったデータ
+ python
+students = [
+    {"name": "tanaka", "score": 80},
+    {"name": "sato", "score": 60},
+    {"name": "suzuki", "score": 80｝］
