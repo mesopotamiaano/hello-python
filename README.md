@@ -95,3 +95,13 @@ students = [
     {"name": "tanaka", "score": 80},
     {"name": "sato", "score": 60},
     {"name": "suzuki", "score": 80｝］
+
+2026/6/2 学習ログ
+今日やったこと
+* 5分問題で get_grade() / create_result() の復習をした
+* student["score"] の値を関数に渡す流れを確認した
+* get_average(students) 関数を使って平均点を出す処理を学習した
+* is_above_average(student, average) 関数で、平均以上かどうかを判定する処理を学習した
+* create_above_average_results(students) で、平均以上の人だけを結果リストに入れる処理を学習した
+* カンマ抜けによる SyntaxError を確認した
+* 「内容は理解できるが、自力実装はまだ難しい」という現在地を確認した
