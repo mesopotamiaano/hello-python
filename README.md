@@ -105,3 +105,16 @@ students = [
 * create_above_average_results(students) で、平均以上の人だけを結果リストに入れる処理を学習した
 * カンマ抜けによる SyntaxError を確認した
 * 「内容は理解できるが、自力実装はまだ難しい」という現在地を確認した
+
+2026/6/3〜6/4 学習ログ 学習テーマ
+Pythonの `list` / `dict` / `for` / `if` / `append()` を使って、学生データを分析する練習を行った。  
+特に、平均点・平均以上の判定・最高得点者・最低得点者を扱った。
+  平均点を出す関数
+使用したデータ
+python
+students = [
+    {"name": "tanaka", "score": 80},
+    {"name": "sato", "score": 60},
+    {"name": "suzuki", "score": 90},
+    {"name": "yamada", "score": 70}
+]
