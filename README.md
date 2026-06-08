@@ -126,3 +126,13 @@ students = [
 * その処理を get_top_student(students) という関数にした
 * return で最高得点者の辞書を返す流れを学習した
 * インデントエラーを確認し、Pythonでは字下げが重要であることを再確認した
+
+2026/6/8 学習ログ
+
+今日やったこと
+* 前回の get_top_student(students) の復習をした
+* その逆パターンとして get_bottom_student(students) を作った
+* 最低得点者を辞書として返す関数を実装した
+* bottom_student = {} と bottom_score = 999 の役割を確認した
+* return bottom_student で、最低得点者の辞書を返す流れを学習した
+* インデントの位置にも注意した
