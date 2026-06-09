@@ -127,12 +127,17 @@ students = [
 * return で最高得点者の辞書を返す流れを学習した
 * インデントエラーを確認し、Pythonでは字下げが重要であることを再確認した
 
-2026/6/8 学習ログ
-
-今日やったこと
+2026/6/8 
 * 前回の get_top_student(students) の復習をした
 * その逆パターンとして get_bottom_student(students) を作った
 * 最低得点者を辞書として返す関数を実装した
 * bottom_student = {} と bottom_score = 999 の役割を確認した
 * return bottom_student で、最低得点者の辞書を返す流れを学習した
 * インデントの位置にも注意した
+
+2026/6/9 
+* get_top_student(students) と get_bottom_student(students) の復習をした
+* 最高得点者と最低得点者を、1つの関数でまとめて返す練習をした
+* get_score_summary(students) を作った
+* top / bottom / average を1つの辞書にまとめて返した
+* average = total / count は、for 文が終わったあと、return の前に書くのが自然だと確認した
