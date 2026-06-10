@@ -141,3 +141,10 @@ students = [
 * get_score_summary(students) を作った
 * top / bottom / average を1つの辞書にまとめて返した
 * average = total / count は、for 文が終わったあと、return の前に書くのが自然だと確認した
+
+2026/6/10 
+* get_average(students) の復習をした
+* 昨日作った get_score_summary(students) を整理した
+* 平均を出す処理を get_average() という別関数に分けた
+* get_score_summary() の中で get_average(students) を呼び出す形にした
+* 「全部1つの関数に書く場合」と「小さい関数に分ける場合」の違いを確認した
