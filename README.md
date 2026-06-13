@@ -149,7 +149,7 @@ students = [
 * get_score_summary() の中で get_average(students) を呼び出す形にした
 * 「全部1つの関数に書く場合」と「小さい関数に分ける場合」の違いを確認した
 
-2026/6/11 学習ログ
+2026/6/11 
 * get_top_student(students) の復習をした
 * get_bottom_student(students) の復習をした
 * get_average(students) の復習をした
@@ -157,3 +157,7 @@ students = [
 * 最高得点者・最低得点者・平均点を1つの辞書にまとめて返した
 * 現在の理解度として、「見れば理解できるが、まだ完全に1人で設計して書く段階ではない」と確認した
 * 次回からSQLに戻る方針を確認した
+
+2026/6/13 
+Pythonはいったん区切り、SQLの復習に戻った。
+今日は主に AND / OR / NOT / LIKE / LIMIT / IS NULL を学習した。
