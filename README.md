@@ -170,3 +170,11 @@ tanaka   90       A
 sato     60       C
 suzuki   80       B
 yamada   70       C
+ 理解したこと
+COUNT(*) は件数を数える
+AVG(score) は平均を出す
+GROUP BY はグループごとにまとめる
+WHERE を使うと、条件に合うデータだけを対象にできる
+ 次回やること
+HAVING を学習する。
+WHERE は集計前の条件、HAVING は集計後の条件という違いを確認する。
