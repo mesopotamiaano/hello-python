@@ -161,3 +161,12 @@ students = [
 2026/6/13 
 Pythonはいったん区切り、SQLの復習に戻った。
 今日は主に AND / OR / NOT / LIKE / LIMIT / IS NULL を学習した。
+
+2026/6/14 
+SQLの復習として、COUNT / AVG / GROUP BY / WHERE を学習した。
+前回までの条件検索に加えて、今日は「人数を数える」「平均を出す」「グループごとに集計する」練習を行った。
+name     score    grade
+tanaka   90       A
+sato     60       C
+suzuki   80       B
+yamada   70       C
