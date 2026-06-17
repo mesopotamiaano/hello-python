@@ -230,3 +230,36 @@ SQLを中心に6セット学習した。
 * WHERE とJOINを組み合わせる
 * ORDER BY / LIMIT とJOINを組み合わせる
 * 余裕があれば、ミニ成果物に向けてSQLの検索・一覧表示に入る
+
+2026/6/17 学習ログ
+今日やったこと
+SQLで JOIN を中心に復習した。
+* students テーブルと scores テーブルを作成した
+* JOIN を使って、学生名と点数をつなげて表示した
+* WHERE sc.score >= 80 で80点以上の人だけを抽出した
+* LIKE '%a%' を使って、名前に a を含む人を検索した
+* ORDER BY sc.score DESC で点数が高い順に並べた
+* LIMIT 2 を使って上位2人だけ表示した
+* COUNT(*) で人数を数えた
+* AVG(sc.score) で平均点を出した
+* SELECT s.name, sc.score、COUNT(*)、AVG(sc.score) の使い分けを練習した
+理解したこと
+* JOIN は別々のテーブルをつなげるために使う
+* ON s.id = sc.student_id は、students 側の id と scores 側の student_id が同じ行同士をつなげる条件
+* s.name は students テーブルの名前
+* sc.score は scores テーブルの点数
+* WHERE を使うと、条件に合うデータだけを取り出せる
+* LIKE '%a%' は、名前に a を含む人を探す
+* ORDER BY sc.score DESC は、点数が高い順に並べる
+* LIMIT 2 は、結果を上から2件だけ表示する
+* SELECT s.name, sc.score は、1人1人の名前と点数を一覧表示する
+* SELECT COUNT(*) は、人数・件数を数える
+* SELECT AVG(sc.score) は、平均点を出す
+次回やること
+次回は、今日の内容を使ってミニ成果物に近い形に進む。
+* 学生一覧を表示するSQL
+* 名前検索するSQL
+* 80点以上の人を表示するSQL
+* 点数ランキングを表示するSQL
+* 人数・平均点をまとめて出すSQL
+余裕があれば、SQLの結果をPythonの変数に入れて、ミニ成果物の形に近づける。
