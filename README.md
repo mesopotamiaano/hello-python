@@ -263,3 +263,34 @@ SQLで JOIN を中心に復習した。
 * 点数ランキングを表示するSQL
 * 人数・平均点をまとめて出すSQL
 余裕があれば、SQLの結果をPythonの変数に入れて、ミニ成果物の形に近づける。
+
+2026/6/18 学習ログ
+今日やったこと
+SQLで取得した結果を、Python側で扱う練習をした。
+
+* JOIN を使って students テーブルと scores テーブルをつなげた
+* WHERE sc.score >= 80 で80点以上の人を抽出した
+* ORDER BY sc.score DESC で点数が高い順に並べた
+* SQLの実行結果を cursor.fetchall() で取得した
+* SQLの結果を students_list や high_score_students などのPython変数に入れた
+* SQLの結果を rows に入れ、for文で1行ずつ取り出した
+* タプルのデータを辞書に変換した
+* 辞書をリストに追加して、APIの返り値に近い形を作った
+理解したこと
+* cursor.fetchall() は、SQLの実行結果をまとめて取得する
+* print(cursor.fetchall()) は結果を表示するだけ
+* students_list = cursor.fetchall() のように変数に入れると、あとからPythonで使える
+* rows はSQLの結果全体を入れるPythonの変数
+* row は rows の中から1行ずつ取り出すための仮の変数名
+* row[0] は1行の中の1個目のデータで、今回は名前
+* row[1] は1行の中の2個目のデータで、今回は点数
+* students_data = [] は、変換した辞書を入れていくための空リスト
+* students_data.append(student) は、名前と点数を入れた辞書をリストに追加する
+* result = {"students": students_data} は、生徒データをまとめた辞書を作っている
+次回やること
+次回は、今日の内容をもう一度復習する。
+* rows = cursor.fetchall() の意味を確認する
+* for row in rows: の使い方を復習する
+* row[0] と row[1] の意味を確認する
+* SQL結果を辞書リストに変換する練習をもう一度行う
+* 余裕があれば、ミニ成果物として「学生一覧データ」をPythonで返す形に近づける
