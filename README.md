@@ -267,7 +267,6 @@ SQLで JOIN を中心に復習した。
 2026/6/18 学習ログ
 今日やったこと
 SQLで取得した結果を、Python側で扱う練習をした。
-
 * JOIN を使って students テーブルと scores テーブルをつなげた
 * WHERE sc.score >= 80 で80点以上の人を抽出した
 * ORDER BY sc.score DESC で点数が高い順に並べた
@@ -294,3 +293,36 @@ SQLで取得した結果を、Python側で扱う練習をした。
 * row[0] と row[1] の意味を確認する
 * SQL結果を辞書リストに変換する練習をもう一度行う
 * 余裕があれば、ミニ成果物として「学生一覧データ」をPythonで返す形に近づける
+
+2026/6/19 学習ログ
+今日やったこと
+SQLで取得した結果を、Pythonで辞書リストに変換する練習をした。
+* students テーブルと scores テーブルをJOINした
+* cursor.fetchall() でSQLの結果を rows に入れた
+* rows の中身を for row in rows: で1行ずつ取り出した
+* row[0] と row[1] を使って、名前と点数を取り出した
+* 名前と点数を辞書に変換した
+* 辞書を students_data に追加した
+* result = {"students": students_data} の形で、APIっぽい返り値を作った
+* 80点以上の人だけを抽出して、high_score_students に辞書リストとしてまとめた
+理解したこと
+* rows はSQLから取ってきた結果で、タプルのリストになっている
+* row は rows の中から1行ずつ取り出したもの
+* row[0] は名前
+* row[1] は点数
+* students_data = [] は、辞書を入れるための空リスト
+* student = {"name": row[0], "score": row[1]} で、1人分のデータを辞書にできる
+* students_data.append(student) は、作った辞書をリストに追加している
+* students_data[0] は、リストの中の1人目の辞書を取り出す
+* first_student["name"] は、1人目の辞書から名前を取り出す
+* first_student["score"] は、1人目の辞書から点数を取り出す
+* result = {"students": students_data} は、学生データをまとめた辞書を作っている
+次回やること
+次回は、今日の変換処理をもう一度復習する。
+* rows = cursor.fetchall() の意味を確認する
+* for row in rows: の流れを復習する
+* row[0] / row[1] の使い方を復習する
+* students_data.append(student) の意味を確認する
+* 余裕があれば、SQL結果を辞書リストにする処理を関数化する
+
+
