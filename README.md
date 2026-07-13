@@ -408,3 +408,17 @@ SQLで取得した結果を、Pythonで辞書リストに変換する練習を�
 * search_students_by_name(keyword) の復習
 * f"%{keyword}%" の意味をもう一度確認する
 * 余裕があれば、これらをまとめて「学生成績管理ミニアプリ」として整理する
+
+2026/7/13 学習ログ
+今日やったこと
+PC復活後の復習として、これまで学習したSQL・Python・関数の内容を総復習した。
+* rows、row、row[0]、row[1] の意味を復習
+* SELECT、FROM、JOIN、ON、WHERE、ORDER BY の役割を復習
+* convert_rows_to_students() の処理を復習
+* get_all_students()
+* get_high_score_students()
+* get_average_score()
+* get_score_summary()
+* search_students_by_name() の役割を復習
+* 新しく「引数（parameter）」を使う関数を学習
+* get_students_over_score(score) を考え、固定条件ではなく自由な点数で検索できる仕組みを理解した
