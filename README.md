@@ -422,3 +422,11 @@ PC復活後の復習として、これまで学習したSQL・Python・関数の
 * search_students_by_name() の役割を復習
 * 新しく「引数（parameter）」を使う関数を学習
 * get_students_over_score(score) を考え、固定条件ではなく自由な点数で検索できる仕組みを理解した
+
+2026/7/22 学習レジュメ
+
+今日は前回学習した引数を使う関数の復習を行い、get_students_over_score(score) の仕組みを中心に理解を深めた。
+
+まず、関数の流れを確認し、score は検索したい点数を表す引数であり、? にはその値が入ること、(score,) はその値をSQLへ渡すためのタプルであることを学んだ。また、rows = cursor.fetchall() はSQLの検索結果をすべて取得し、convert_rows_to_students(rows) はその結果を辞書のリストへ変換する役割を持ち、return students が最終的な検索結果を返すことを復習した。
+
+さらに、get_students_over_score(80)、get_students_over_score(60)、get_students_over_score(90) の実行結果を考え、同じ関数でも引数を変えるだけで異なる結果を取得できることを理解した。また、>= を <= に変更すると指定した点数以下を取得でき、DESC を ASC に変更すると点数の低い順に並び替えられることも確認した。
