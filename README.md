@@ -430,3 +430,34 @@ PC復活後の復習として、これまで学習したSQL・Python・関数の
 まず、関数の流れを確認し、score は検索したい点数を表す引数であり、? にはその値が入ること、(score,) はその値をSQLへ渡すためのタプルであることを学んだ。また、rows = cursor.fetchall() はSQLの検索結果をすべて取得し、convert_rows_to_students(rows) はその結果を辞書のリストへ変換する役割を持ち、return students が最終的な検索結果を返すことを復習した。
 
 さらに、get_students_over_score(80)、get_students_over_score(60)、get_students_over_score(90) の実行結果を考え、同じ関数でも引数を変えるだけで異なる結果を取得できることを理解した。また、>= を <= に変更すると指定した点数以下を取得でき、DESC を ASC に変更すると点数の低い順に並び替えられることも確認した。
+
+2026/7/23 学習レジュメ
+
+今日はこれまで学習してきた内容の総復習を行い、関数を見ながらではあるが自分で組み立てる練習を行った。また、新しく引数を2つ使う関数を作成し、SQLへ複数の値を渡す方法を学習した。
+
+まず、convert_rows_to_students(rows) を見ずに書くことに挑戦したが、この関数はまだコードを見ないと書くことが難しかった。一方で、get_students_over_score(score) はSQLや fetchall()、convert_rows_to_students() を組み合わせてほぼ自力で作成することができ、前回より理解が深まっていることを実感した。
+
+その後、新しく get_students_between_score(min_score, max_score) を作成した。最初は ORDER BY を書き忘れたり、convert_rows_to_students(rows) の代わりに自分自身の関数を呼び出してしまうミスがあったが、修正後は正常に動作した。WHERE sc.score >= ? AND sc.score <= ? とすることで、指定した点数の範囲内の生徒だけを取得できることを確認した。また、(min_score, max_score) と書くことで、2つの値をSQLへ渡していることを理解した。
+
+総復習では、fetchall() はSQLの検索結果をPythonへ取得するために使われること、convert_rows_to_students(rows) は検索結果を辞書のリストへ変換する役割を持つことを説明できた。また、FastAPIで使用する @app.get("/students/{score}") の {score} が、これまで学習してきた関数の引数 score と同じ役割を持つことも理解した。
+
+さらに、get_students_over_score(score) と get_students_between_score(min_score, max_score) を比較し、後者は点数の範囲を自由に指定できるため、より汎用性が高く再利用しやすい関数であることを説明できた。
+
+今日の成果
+
+* get_students_over_score(score) をほぼ自力で作成できた。
+* get_students_between_score(min_score, max_score) を作成し、引数を2つ使う方法を理解した。
+* SQLへ複数の値を渡す方法を学んだ。
+* fetchall() と convert_rows_to_students() の役割を説明できるようになった。
+* 関数の再利用性（汎用性）の考え方を理解した。
+* FastAPIで使う引数の考え方が、現在学習しているPythonの関数とつながることを理解した。
+
+現在の理解度
+
+約97％
+
+convert_rows_to_students() はまだ見ながら書く必要があるものの、get_students_over_score() や get_students_between_score() は流れを理解しながら組み立てられるようになってきた。コードを丸暗記する段階ではなく、「処理の流れを理解して必要に応じて書ける」段階へ着実に成長している。
+
+次回の予定
+
+次回からはいよいよFastAPIの学習を開始する。これまで作成したSQL・Pythonの関数を利用しながら、ブラウザからデータを取得できるWeb APIを作成し、バックエンド開発の第一歩を学んでいく。
