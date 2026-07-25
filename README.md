@@ -461,3 +461,7 @@ convert_rows_to_students() はまだ見ながら書く必要があるものの�
 次回の予定
 
 次回からはいよいよFastAPIの学習を開始する。これまで作成したSQL・Pythonの関数を利用しながら、ブラウザからデータを取得できるWeb APIを作成し、バックエンド開発の第一歩を学んでいく。
+
+2026/7/25 学習レジュメ
+
+今日はFastAPIの学習を開始した。from fastapi import FastAPI はFastAPIライブラリを使えるようにするための文であり、app = FastAPI() はWebアプリの本体を作成することを学んだ。また、@app.get("/") はブラウザで指定したURLにアクセスしたときに関数を実行する仕組みであり、return の内容がブラウザへJSON形式で返されることを理解した。さらに、@app.get("/students") や @app.get("/students/{score}") を通して、これまで作成したPythonの関数をブラウザから利用できるようになることを学んだ。FastAPIになってもPythonやSQLの処理内容は変わらず、呼び出し方が変わるだけであることを理解した。FastAPIのインストールはまだできていないため、次回は環境構築を行い、実際にブラウザでAPIを動かす予定。
