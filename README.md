@@ -465,3 +465,7 @@ convert_rows_to_students() はまだ見ながら書く必要があるものの�
 2026/7/25 学習レジュメ
 
 今日はFastAPIの学習を開始した。from fastapi import FastAPI はFastAPIライブラリを使えるようにするための文であり、app = FastAPI() はWebアプリの本体を作成することを学んだ。また、@app.get("/") はブラウザで指定したURLにアクセスしたときに関数を実行する仕組みであり、return の内容がブラウザへJSON形式で返されることを理解した。さらに、@app.get("/students") や @app.get("/students/{score}") を通して、これまで作成したPythonの関数をブラウザから利用できるようになることを学んだ。FastAPIになってもPythonやSQLの処理内容は変わらず、呼び出し方が変わるだけであることを理解した。FastAPIのインストールはまだできていないため、次回は環境構築を行い、実際にブラウザでAPIを動かす予定。
+
+2026/7/26 学習レジュメ
+
+今日はFastAPIを実際に動かす環境を構築し、main.py を作成してUvicornを起動した。ブラウザで http://127.0.0.1:8000/ を開き、{"message":"Hello FastAPI!"} が表示されることを確認し、初めてFastAPIアプリを動かすことができた。また、app = FastAPI() はWebアプリを作成し、@app.get("/") はトップページへのアクセス時に home() を実行すること、return の内容がブラウザへ返される仕組みを学んだ。FastAPIは新しい処理を書くものではなく、これまで作成したPythonの関数をブラウザから利用できるようにする仕組みであることを理解した。次回は /docs を使い、APIの動作確認とこれまで作成した関数をFastAPIから呼び出す方法を学習する予定。
