@@ -469,3 +469,7 @@ convert_rows_to_students() はまだ見ながら書く必要があるものの�
 2026/7/26 学習レジュメ
 
 今日はFastAPIを実際に動かす環境を構築し、main.py を作成してUvicornを起動した。ブラウザで http://127.0.0.1:8000/ を開き、{"message":"Hello FastAPI!"} が表示されることを確認し、初めてFastAPIアプリを動かすことができた。また、app = FastAPI() はWebアプリを作成し、@app.get("/") はトップページへのアクセス時に home() を実行すること、return の内容がブラウザへ返される仕組みを学んだ。FastAPIは新しい処理を書くものではなく、これまで作成したPythonの関数をブラウザから利用できるようにする仕組みであることを理解した。次回は /docs を使い、APIの動作確認とこれまで作成した関数をFastAPIから呼び出す方法を学習する予定。
+
+2026/7/27 学習レジュメ
+
+今日はFastAPIの/docs（Swagger UI）を使い、APIの一覧や動作確認ができることを学んだ。また、@app.get("/")と@app.get("/hello")を比較し、URLごとに実行される関数が変わる仕組みを理解した。{"detail":"Not Found"}の原因は、Jupyterのセルではなくmain.pyを更新する必要があることだと分かった。まだFastAPIの全体像は完全には理解できていないが、「ブラウザ → URL → FastAPI → 対応する関数 → return → ブラウザ」という基本的な流れは理解できた。
