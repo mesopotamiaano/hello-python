@@ -473,3 +473,7 @@ convert_rows_to_students() はまだ見ながら書く必要があるものの�
 2026/7/27 学習レジュメ
 
 今日はFastAPIの/docs（Swagger UI）を使い、APIの一覧や動作確認ができることを学んだ。また、@app.get("/")と@app.get("/hello")を比較し、URLごとに実行される関数が変わる仕組みを理解した。{"detail":"Not Found"}の原因は、Jupyterのセルではなくmain.pyを更新する必要があることだと分かった。まだFastAPIの全体像は完全には理解できていないが、「ブラウザ → URL → FastAPI → 対応する関数 → return → ブラウザ」という基本的な流れは理解できた。
+
+2026/7/28 学習レジュメ
+
+今日はFastAPIで生徒一覧と指定点以上の生徒を返すAPIを作成した。/studentsでは全員のデータを返し、/students/over/{score}ではURLから受け取った点数を基準に、生徒を1人ずつ確認して条件を満たす人だけを返す仕組みを学んだ。また、score: intは点数を整数として受け取る指定であり、result.append(student)は条件に合う生徒の辞書を結果リストへ追加する処理だと理解した。/docsからもAPIを実行し、入力した点数によって返る結果が変わることを確認できた。今日はSQLを使わず、FastAPIのURL・引数・関数・返り値の流れに集中した。
