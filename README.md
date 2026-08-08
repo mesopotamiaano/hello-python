@@ -493,3 +493,7 @@ FastAPI・SQLite・SQLの役割と処理の流れを復習し、SQLの取得結�
 2026/8/7 学習レジュメ
 
 今日はFastAPI・SQLite・SQLの復習を中心に、AS、JOIN、ON、WHERE、fetchall()、conn、cursor、initialize_database()などの役割をアウトプット形式で確認した。さらに、/students/under/{score}を使って50点以下・70点以下・100点以下の表示を確認し、ASCとDESCを切り替えて並び順の違いも実践した。前回より短い30分で一通り確認できたので、今後も同じ用語や処理を繰り返し問題形式で復習して定着を進める。
+
+2026/8/8 学習レジュメ
+
+今日はFastAPI・SQLite・SQLの復習を20分行い、AS、JOIN、ON、WHERE、ASC、DESC、conn、cursor、fetchall()、initialize_database()、(score,)の意味をアウトプット形式で確認した。特にWHEREは条件で絞り込む、cursorはSQLを実行する操作役、fetchall()は検索結果をすべて取得する処理だと整理した。また、/students/under/70では?に70だけが入り、その条件によって50・60・70点の生徒が取得される流れも確認した。次回もこの3点を中心に反復して定着させる。
