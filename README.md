@@ -497,3 +497,7 @@ FastAPI・SQLite・SQLの役割と処理の流れを復習し、SQLの取得結�
 2026/8/8 学習レジュメ
 
 今日はFastAPI・SQLite・SQLの復習を20分行い、AS、JOIN、ON、WHERE、ASC、DESC、conn、cursor、fetchall()、initialize_database()、(score,)の意味をアウトプット形式で確認した。特にWHEREは条件で絞り込む、cursorはSQLを実行する操作役、fetchall()は検索結果をすべて取得する処理だと整理した。また、/students/under/70では?に70だけが入り、その条件によって50・60・70点の生徒が取得される流れも確認した。次回もこの3点を中心に反復して定着させる。
+
+2026/8/9 学習レジュメ
+
+今日はFastAPI・SQLite・SQLの基本用語を15分で復習した。WHEREは条件に合うデータを絞り込む、cursorはSQLを実行する操作役、fetchall()はSQLの検索結果をすべて取得する、connはデータベースとの接続、(score,)はPythonのscoreをSQLの?へ渡すための1要素タプルであることを確認した。また、rowsにはタプルのリストが入り、それをconvert_rows_to_students(rows)で辞書のリストへ変換する流れも復習した。エラーについては、NameErrorは名前の未定義やスペルミス、no such tableはテーブルが存在しない、今回のtuple object is not callableはカンマ抜けを疑うことを確認した。次回もfetchall()とconnを重点的に反復して定着させる。
