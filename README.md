@@ -501,3 +501,7 @@ FastAPI・SQLite・SQLの役割と処理の流れを復習し、SQLの取得結�
 2026/8/9 学習レジュメ
 
 今日はFastAPI・SQLite・SQLの基本用語を15分で復習した。WHEREは条件に合うデータを絞り込む、cursorはSQLを実行する操作役、fetchall()はSQLの検索結果をすべて取得する、connはデータベースとの接続、(score,)はPythonのscoreをSQLの?へ渡すための1要素タプルであることを確認した。また、rowsにはタプルのリストが入り、それをconvert_rows_to_students(rows)で辞書のリストへ変換する流れも復習した。エラーについては、NameErrorは名前の未定義やスペルミス、no such tableはテーブルが存在しない、今回のtuple object is not callableはカンマ抜けを疑うことを確認した。次回もfetchall()とconnを重点的に反復して定着させる。
+
+2026/8/13 学習レジュメ
+
+今日はFastAPI・SQLite・SQLの基礎をアウトプット中心で復習した。connはデータベース接続、cursorはSQLの操作役、cursor.execute()はSQL実行、fetchall()は検索結果をすべて取得する処理だと整理した。また、(score,)でPythonの点数をSQLの?へ渡し、取得したタプルのリストをconvert_rows_to_students(rows)で辞書のリストへ変換する流れを確認した。さらに、FastAPI・PostgreSQL・Dockerはそれぞれ別の技術で、FastAPIはAPIを作る、PostgreSQLはデータを保存する、Dockerは実行環境をまとめる役割だと理解した。最後に、FastAPI → Python関数 → DB接続 → SQL実行 → fetchall() → 辞書リスト変換 → ブラウザへ返すという全体の処理順もかなり定着した。
