@@ -509,3 +509,7 @@ FastAPI・SQLite・SQLの役割と処理の流れを復習し、SQLの取得結�
 2026/8/14 学習レジュメ
 
 今日はFastAPIのGET APIを復習した後、新しくPOSTとPydanticを学んだ。POST /studentsでJSON形式の生徒データを送信し、StudentCreate(BaseModel)でname: str、score: intという入力データの型を定義した。Pydanticは送られてきたデータの形や型を確認する役割があり、Swagger UIの/docsから{"name":"Kato","score":85}を送信して、200レスポンスで同じ内容が返ることを確認した。今回はまだSQLiteへの保存はしておらず、次回はPOSTで受け取ったデータをSQLのINSERTで保存する流れに進む。
+
+2026/8/15 学習レジュメ
+
+今日はPOSTで受け取ったデータを、SQLiteへ実際に保存する処理を学んだ。INSERTでデータを追加し、cursor.lastrowidで追加した生徒のIDを取得、commit()で変更を確定して保存する流れを確認した。StudentCreateで受け取ったstudent.nameとstudent.scoreをadd_student()へ渡し、studentsとscoresの2つのテーブルへ保存した。最後にGET /students/under/100でKato・85が表示され、POSTした内容が本当にDBへ保存されたことを確認できた。
