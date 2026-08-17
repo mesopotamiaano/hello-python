@@ -513,3 +513,7 @@ FastAPI・SQLite・SQLの役割と処理の流れを復習し、SQLの取得結�
 2026/8/15 学習レジュメ
 
 今日はPOSTで受け取ったデータを、SQLiteへ実際に保存する処理を学んだ。INSERTでデータを追加し、cursor.lastrowidで追加した生徒のIDを取得、commit()で変更を確定して保存する流れを確認した。StudentCreateで受け取ったstudent.nameとstudent.scoreをadd_student()へ渡し、studentsとscoresの2つのテーブルへ保存した。最後にGET /students/under/100でKato・85が表示され、POSTした内容が本当にDBへ保存されたことを確認できた。
+
+2026/8/17 学習レジュメ
+
+今日はadd_student(name, score)を1行ずつ分解して理解した。connでSQLiteに接続し、cursorでSQLを操作、最初のINSERTで名前をstudentsテーブルへ追加する流れを確認した。lastrowidでは最後に追加した生徒のIDを取得し、そのIDと点数を(student_id, score)としてscoresテーブルへ保存することを学んだ。また、commit()で変更を確定・保存し、close()でDB接続を閉じ、最後にid・name・scoreを辞書で返す流れを整理した。Kato・85の場合、studentsのID=6とscoresのstudent_id=6がつながることで、名前と点数が同じ生徒のデータとして関連付けられることも理解した。
