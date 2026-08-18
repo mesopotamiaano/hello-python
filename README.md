@@ -517,3 +517,10 @@ FastAPI・SQLite・SQLの役割と処理の流れを復習し、SQLの取得結�
 2026/8/17 学習レジュメ
 
 今日はadd_student(name, score)を1行ずつ分解して理解した。connでSQLiteに接続し、cursorでSQLを操作、最初のINSERTで名前をstudentsテーブルへ追加する流れを確認した。lastrowidでは最後に追加した生徒のIDを取得し、そのIDと点数を(student_id, score)としてscoresテーブルへ保存することを学んだ。また、commit()で変更を確定・保存し、close()でDB接続を閉じ、最後にid・name・scoreを辞書で返す流れを整理した。Kato・85の場合、studentsのID=6とscoresのstudent_id=6がつながることで、名前と点数が同じ生徒のデータとして関連付けられることも理解した。
+
+2026/8/18 学習レジュメ
+
+今日はadd_student()の復習をした後、新しくDELETEによるデータ削除を学んだ。DELETE FROM ... WHERE ...で削除対象を指定し、(student_id,)でPythonのIDをSQLの?へ渡す流れを確認した。Katoのデータはstudentsとscoresの2つのテーブルに分かれているため、両方からID=6を削除し、commit()で変更を確定した。
+
+FastAPIでは@app.delete("/students/{student_id}")を使い、Swagger UIからID=6をDELETEした。最後にGETで確認し、Kato・85が一覧から消えていることを確認できた。これでCRUDのうち、Create＝追加、Read＝取得、Delete＝削除まで実際に動かせるようになった。次はUpdate＝更新に進む予定。
+
