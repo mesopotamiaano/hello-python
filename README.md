@@ -524,3 +524,9 @@ FastAPI・SQLite・SQLの役割と処理の流れを復習し、SQLの取得結�
 
 FastAPIでは@app.delete("/students/{student_id}")を使い、Swagger UIからID=6をDELETEした。最後にGETで確認し、Kato・85が一覧から消えていることを確認できた。これでCRUDのうち、Create＝追加、Read＝取得、Delete＝削除まで実際に動かせるようになった。次はUpdate＝更新に進む予定。
 
+2026/8/25 学習レジュメ
+
+今日はCRUDの復習後、最後に残っていたUpdate（更新）を学習した。UPDATEで既存データを書き換え、SETで新しい値、WHEREで更新対象を指定する流れを確認した。FastAPIではPUTを使い、ID=3のYamadaを70点から95点へ更新し、GETで実際に変更されたことを確認できた。
+
+これでCRUDのCreate＝追加、Read＝取得、Update＝更新、Delete＝削除を一通り実装できた。コードをゼロから書く段階にはまだ達していないが、各処理の意味はかなり追えるようになっている。次回は新しい内容より、CRUDの検索練習・穴埋め・一部分を自力で書く練習を中心に定着させる。
+
