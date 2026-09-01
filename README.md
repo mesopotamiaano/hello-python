@@ -539,3 +539,13 @@ FastAPIでは@app.delete("/students/{student_id}")を使い、Swagger UIからID
 削除処理では、「studentsテーブルから、指定したIDのデータだけを削除する」という形を練習した。DELETEの後にFROMでテーブル名を書き、WHEREで削除対象を指定する流れを確認した。
 
 現在は、コードを見れば理解できる段階から、SQLの基本構造なら見ずに書き始められる段階へ進んでいる。ただし、データベース接続の書き方や、更新時のSET、削除時のFROMなど細かい部分はまだ抜けるため、次回も穴埋め問題と一部分を自力で書く練習を続ける。
+
+2026/9/1 学習レジュメ
+
+今日はCRUDの定着を目的に、SQLとSQLite操作の検索練習・穴埋め・自力記述を行った。connect＝DB接続、cursor＝SQL操作役、execute＝SQL実行、fetchall()＝検索結果をすべて取得、commit()＝変更の確定、lastrowid＝最後に追加した行のID取得を復習した。
+
+UPDATEでは、UPDATE → SET → WHEREの基本構造を確認し、ID=3の生徒を95点に更新するSQLをほぼ自力で書けた。DELETEでも、DELETE FROM → WHEREという構造を確認し、IDを指定して削除する処理を練習した。
+
+最後にINSERTを復習し、INSERT INTO students (name) VALUES (?)はstudentsテーブルのname列に値を追加する意味で、("Kato",)の,は1要素のタプルを作るためだと整理した。
+
+現在は、SQLの基本構造は見ずにある程度書けるようになってきた一方、execute()の中への書き方、テーブル名、カンマなど細かい部分はまだ抜けるため、次回も穴埋めと部分的な自力記述を続けて定着させる。
