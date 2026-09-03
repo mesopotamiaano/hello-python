@@ -549,3 +549,11 @@ UPDATEでは、UPDATE → SET → WHEREの基本構造を確認し、ID=3の生�
 最後にINSERTを復習し、INSERT INTO students (name) VALUES (?)はstudentsテーブルのname列に値を追加する意味で、("Kato",)の,は1要素のタプルを作るためだと整理した。
 
 現在は、SQLの基本構造は見ずにある程度書けるようになってきた一方、execute()の中への書き方、テーブル名、カンマなど細かい部分はまだ抜けるため、次回も穴埋めと部分的な自力記述を続けて定着させる。
+
+2026/9/3 学習レジュメ
+
+今日はCRUDの定着を目的に、SQLの検索練習・穴埋め・自力記述を行った。cursor.execute()には「SQL文」と「?に渡す値」をセットで入れることを確認し、INSERT・UPDATE・DELETEの基本構造を繰り返し練習した。
+
+INSERTでは、studentsテーブルのname列に値を追加し、VALUES (?)と1要素タプルを使ってPython側の値をSQLへ渡す流れを確認した。UPDATEではUPDATE → SET → WHERE、DELETEではDELETE FROM → WHEREの形を自力でかなり書けるようになった。
+
+2セット目では、add_student()の流れを分解し、名前を追加→lastrowidでID取得→IDと点数をscoresへ追加→commit()で保存→returnで辞書をFastAPI側へ返す流れを確認した。現在はSQLの骨格はかなり自力で書けるようになっており、今後はexecute()のカンマやテーブル名など細かい部分を反復して定着させる。
