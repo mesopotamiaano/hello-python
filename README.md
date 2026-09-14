@@ -1,3 +1,4 @@
+
 # hello-python
 
 今日できたこと
@@ -557,3 +558,9 @@ UPDATEでは、UPDATE → SET → WHEREの基本構造を確認し、ID=3の生�
 INSERTでは、studentsテーブルのname列に値を追加し、VALUES (?)と1要素タプルを使ってPython側の値をSQLへ渡す流れを確認した。UPDATEではUPDATE → SET → WHERE、DELETEではDELETE FROM → WHEREの形を自力でかなり書けるようになった。
 
 2セット目では、add_student()の流れを分解し、名前を追加→lastrowidでID取得→IDと点数をscoresへ追加→commit()で保存→returnで辞書をFastAPI側へ返す流れを確認した。現在はSQLの骨格はかなり自力で書けるようになっており、今後はexecute()のカンマやテーブル名など細かい部分を反復して定着させる。
+
+2026/9/14 学習レジュメ
+
+今日はFastAPIのエラー処理とCRUDの復習を行った。新しくHTTPExceptionを使い、UPDATEやDELETEの前にSELECTとfetchone()で指定IDの生徒が存在するか確認し、存在しない場合は404 Student not foundを返す処理を実装した。fetchone()は1件取得し、見つからない場合はNoneになることも確認した。
+
+後半はCRUDを復習し、Create＝INSERT / POST、Read＝SELECT / GET、Update＝UPDATE / PUT、Delete＝DELETE / DELETEという対応を整理した。CRUDの意味やSQLの骨格はかなり残っている一方、HTTPメソッドやfetchone()・fetchall()など細部はまだ混ざるため、今後も穴埋めと自力記述を繰り返して定着させる。
