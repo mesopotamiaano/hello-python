@@ -564,3 +564,7 @@ INSERTでは、studentsテーブルのname列に値を追加し、VALUES (?)と1
 今日はFastAPIのエラー処理とCRUDの復習を行った。新しくHTTPExceptionを使い、UPDATEやDELETEの前にSELECTとfetchone()で指定IDの生徒が存在するか確認し、存在しない場合は404 Student not foundを返す処理を実装した。fetchone()は1件取得し、見つからない場合はNoneになることも確認した。
 
 後半はCRUDを復習し、Create＝INSERT / POST、Read＝SELECT / GET、Update＝UPDATE / PUT、Delete＝DELETE / DELETEという対応を整理した。CRUDの意味やSQLの骨格はかなり残っている一方、HTTPメソッドやfetchone()・fetchall()など細部はまだ混ざるため、今後も穴埋めと自力記述を繰り返して定着させる。
+
+2026/9/15 学習レジュメ
+
+今日はCRUDと404エラー処理を10分で復習した。FastAPIではCreate＝POST、Read＝GET、Update＝PUT、Delete＝DELETEと対応することを確認した。また、fetchone()は検索結果を1行取得し、対象が見つからない場合はNoneになることを復習した。
