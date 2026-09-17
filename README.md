@@ -568,3 +568,11 @@ INSERTでは、studentsテーブルのname列に値を追加し、VALUES (?)と1
 2026/9/15 学習レジュメ
 
 今日はCRUDと404エラー処理を10分で復習した。FastAPIではCreate＝POST、Read＝GET、Update＝PUT、Delete＝DELETEと対応することを確認した。また、fetchone()は検索結果を1行取得し、対象が見つからない場合はNoneになることを復習した。
+
+2026/9/17 学習レジュメ
+
+今日はCRUDとHTTPステータスコードの復習・実践を行った。最初に、Create＝POST / INSERT、Read＝GET / SELECT、Update＝PUT / UPDATE、Delete＝DELETE / DELETEという対応を確認した。また、fetchone()は検索結果を1行取得し、見つからない場合はNoneになること、fetchall()は検索結果をすべて取得すること、commit()はDBへの変更を確定・保存することを復習した。
+
+その後、HTTPステータスコードを学び、200は一般的な成功、201は新規作成成功、404は指定したデータが見つからない、422は入力データの型や内容に問題がある場合に返ることを確認した。POST /students に status_code=201 を追加し、Kato・85点を登録したところ、実際に201が返ることを確認できた。
+
+さらに、score: int に対して "abc" を送信し、FastAPI / PydanticがDB処理に入る前の入力チェック段階で処理を止め、422を返すことをSwagger UIで確認した。現在はCRUDの意味と基本構造はかなり定着しており、今後はHTTPステータスコードとFastAPI側の処理をコードと結びつけて覚えていく段階。
