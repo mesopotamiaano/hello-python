@@ -582,3 +582,9 @@ INSERTでは、studentsテーブルのname列に値を追加し、VALUES (?)と1
 今日はCRUDとHTTPステータスコードを20分で復習した。Create＝INSERT / POST、Read＝SELECT / GET、Update＝UPDATE / PUT、Delete＝DELETE / DELETEの対応を確認した。また、fetchone()は検索結果を1行取得し、見つからない場合はNoneになること、404はデータが見つからない、422は入力データの型や内容に問題がある場合に返ることを復習した。
 
 最初はPOSTとPUTが少し混ざったが、最後にはPOST＝新規追加、PUT＝更新、POST成功＝201、存在しないID＝404、型エラー＝422まで正しく整理できた。
+
+2026/9/19 学習レジュメ
+
+今日はCRUD・HTTPステータスコードを復習し、Create＝INSERT / POST、Read＝SELECT / GET、Update＝UPDATE / PUT、Delete＝DELETE / DELETEの対応を確認した。fetchone()は検索結果を1行取得し、見つからない場合はNone、fetchall()は検索結果をすべて取得することも復習した。
+
+後半はPydanticの値チェックを学び、score: int = Field(ge=0, le=100)で、scoreを整数かつ0以上100以下に制限できることを確認した。ge=0は0以上、le=100は100以下を意味し、85は通るが、-10や150は不正な値として弾ける。Pydanticは型だけでなく、値の範囲もチェックできることを学んだ。
