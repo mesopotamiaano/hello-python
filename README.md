@@ -588,3 +588,11 @@ INSERTでは、studentsテーブルのname列に値を追加し、VALUES (?)と1
 今日はCRUD・HTTPステータスコードを復習し、Create＝INSERT / POST、Read＝SELECT / GET、Update＝UPDATE / PUT、Delete＝DELETE / DELETEの対応を確認した。fetchone()は検索結果を1行取得し、見つからない場合はNone、fetchall()は検索結果をすべて取得することも復習した。
 
 後半はPydanticの値チェックを学び、score: int = Field(ge=0, le=100)で、scoreを整数かつ0以上100以下に制限できることを確認した。ge=0は0以上、le=100は100以下を意味し、85は通るが、-10や150は不正な値として弾ける。Pydanticは型だけでなく、値の範囲もチェックできることを学んだ。
+
+2026/9/20 学習レジュメ
+
+今日はまずCRUD、FastAPI、HTTPステータスコード、Pydanticの復習を行った。SQLはデータベースを操作するための言語で、FastAPIはブラウザやアプリからの要求を受け取り、Pythonの処理結果を返す仕組みであることを確認した。CRUDは、Create＝INSERT / POST、Read＝SELECT / GET、Update＝UPDATE / PUT、Delete＝DELETE / DELETEという対応を復習した。また、fetchone()は検索結果を1行取得し、fetchall()は検索結果をすべて取得すること、commit()はDBへの変更を確定・保存することも確認した。
+
+後半ではPydanticの入力チェックを進めた。Fieldを使って、名前は1文字以上20文字以下、点数は0以上100以下に制限する設定を追加した。name=""を送ると422、score=150を送っても422になることをSwagger UIで実際に確認できた。途中でmin_lengthをmim_lengthと書いていたスペルミスが原因で空文字が通ってしまったが、保存先、クラスの重複、読み込み状態、Schemaの確認まで順番に切り分けて原因を特定できた。
+
+今日の重要点は、Pydanticは型だけでなく値の範囲や文字数もチェックでき、不正なデータをDBに入る前に422で止められるということ。次回はこの入力チェックを軽く復習してから、FastAPIの次の内容へ進めればよい。
