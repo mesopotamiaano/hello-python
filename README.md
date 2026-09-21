@@ -596,3 +596,11 @@ INSERTでは、studentsテーブルのname列に値を追加し、VALUES (?)と1
 後半ではPydanticの入力チェックを進めた。Fieldを使って、名前は1文字以上20文字以下、点数は0以上100以下に制限する設定を追加した。name=""を送ると422、score=150を送っても422になることをSwagger UIで実際に確認できた。途中でmin_lengthをmim_lengthと書いていたスペルミスが原因で空文字が通ってしまったが、保存先、クラスの重複、読み込み状態、Schemaの確認まで順番に切り分けて原因を特定できた。
 
 今日の重要点は、Pydanticは型だけでなく値の範囲や文字数もチェックでき、不正なデータをDBに入る前に422で止められるということ。次回はこの入力チェックを軽く復習してから、FastAPIの次の内容へ進めればよい。
+
+2026/9/21 学習レジュメ
+
+今日はPCを使わず、CRUD・FastAPI・Pydantic・エラー処理を復習した。Create＝INSERT / POST、Read＝SELECT / GET、Update＝UPDATE / PUT、Delete＝DELETE / DELETEの対応を確認し、fetchone()は検索結果を1行取得、fetchall()は全件取得、commit()はDBへの変更を確定・保存する処理だと整理した。
+
+また、201＝新規作成成功、404＝データが見つからない、422＝入力データの型や内容がルールに合っていないことを復習した。Pydanticでは名前を1〜20文字、点数を0〜100の整数に制限できることも確認した。
+
+最後に処理の流れを確認し、正常なPOSTは「FastAPI → Pydantic → INSERT → commit → return → 201」、不正な入力はPydanticで止まり422、存在しないIDの更新は「SELECT → fetchone() → None確認 → 404」で終了することを整理した。
