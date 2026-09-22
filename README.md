@@ -603,4 +603,7 @@ INSERTでは、studentsテーブルのname列に値を追加し、VALUES (?)と1
 
 また、201＝新規作成成功、404＝データが見つからない、422＝入力データの型や内容がルールに合っていないことを復習した。Pydanticでは名前を1〜20文字、点数を0〜100の整数に制限できることも確認した。
 
-最後に処理の流れを確認し、正常なPOSTは「FastAPI → Pydantic → INSERT → commit → return → 201」、不正な入力はPydanticで止まり422、存在しないIDの更新は「SELECT → fetchone() → None確認 → 404」で終了することを整理した。
+最後に処理の流れを確認し、正常なPOSTは「FastAPI → Pydantic → INSERT → commit → return → 201」、不正な入力はPydanticで止まり422、存在しないIDの更新は「SELECT → fetchone() → None確認 → 404」で終了することを整理し
+
+9/22
+今日はPythonの辞書から値を取り出す方法と、SQLの条件抽出を復習した。product["price"] で価格を取り出して比較すること、< は未満、<= は以下を表すことを確認した。SQLでは、SELECT で取得する列、FROM でテーブル、WHERE で条件を指定する。次回は、この形を見ずに書けるように復習する。
