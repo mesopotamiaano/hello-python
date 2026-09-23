@@ -598,12 +598,13 @@ INSERTでは、studentsテーブルのname列に値を追加し、VALUES (?)と1
 今日の重要点は、Pydanticは型だけでなく値の範囲や文字数もチェックでき、不正なデータをDBに入る前に422で止められるということ。次回はこの入力チェックを軽く復習してから、FastAPIの次の内容へ進めればよい。
 
 2026/9/21 学習レジュメ
-
 今日はPCを使わず、CRUD・FastAPI・Pydantic・エラー処理を復習した。Create＝INSERT / POST、Read＝SELECT / GET、Update＝UPDATE / PUT、Delete＝DELETE / DELETEの対応を確認し、fetchone()は検索結果を1行取得、fetchall()は全件取得、commit()はDBへの変更を確定・保存する処理だと整理した。
-
 また、201＝新規作成成功、404＝データが見つからない、422＝入力データの型や内容がルールに合っていないことを復習した。Pydanticでは名前を1〜20文字、点数を0〜100の整数に制限できることも確認した。
-
 最後に処理の流れを確認し、正常なPOSTは「FastAPI → Pydantic → INSERT → commit → return → 201」、不正な入力はPydanticで止まり422、存在しないIDの更新は「SELECT → fetchone() → None確認 → 404」で終了することを整理し
 
 9/22
 今日はPythonの辞書から値を取り出す方法と、SQLの条件抽出を復習した。product["price"] で価格を取り出して比較すること、< は未満、<= は以下を表すことを確認した。SQLでは、SELECT で取得する列、FROM でテーブル、WHERE で条件を指定する。次回は、この形を見ずに書けるように復習する。
+
+2026/9/23 学習レジュメ
+今日は前半でFastAPIのResponse Modelを学び、StudentCreateは入力用、StudentResponseは出力用であることを整理した。response_model=StudentResponseをPOSTに追加し、実際にid・name・scoreの形で201レスポンスが返ることをSwagger UIで確認した。また、Response Modelにない余計な項目は除外され、必須項目が不足すると出力チェックでエラーになることも学んだ。
+後半はPCを使ってCRUDの自力記述を復習した。sqlite3.connect()、conn.cursor()から始め、INSERT、conn.commit()、conn.close()、UPDATE、DELETE、SELECTまで見ずに書く練習を行った。特にUPDATE scores SET score = ? WHERE student_id = ?やDELETE FROM scores WHERE student_id = ?はかなり自力で書けるようになった。一方で、fetchone()とfetchall()、conn.commit()・conn.close()など細部はまだ混ざるため、次回も短く復習する。
