@@ -608,3 +608,8 @@ INSERTでは、studentsテーブルのname列に値を追加し、VALUES (?)と1
 2026/9/23 学習レジュメ
 今日は前半でFastAPIのResponse Modelを学び、StudentCreateは入力用、StudentResponseは出力用であることを整理した。response_model=StudentResponseをPOSTに追加し、実際にid・name・scoreの形で201レスポンスが返ることをSwagger UIで確認した。また、Response Modelにない余計な項目は除外され、必須項目が不足すると出力チェックでエラーになることも学んだ。
 後半はPCを使ってCRUDの自力記述を復習した。sqlite3.connect()、conn.cursor()から始め、INSERT、conn.commit()、conn.close()、UPDATE、DELETE、SELECTまで見ずに書く練習を行った。特にUPDATE scores SET score = ? WHERE student_id = ?やDELETE FROM scores WHERE student_id = ?はかなり自力で書けるようになった。一方で、fetchone()とfetchall()、conn.commit()・conn.close()など細部はまだ混ざるため、次回も短く復習する。
+
+2026/9/24 学習レジュメ
+今日はSQLite操作の基本と、FastAPI・Pydantic・Response Modelの流れを復習した。connect()はDB接続、cursor()はSQL操作役、execute()はSQL実行、commit()は変更の確定・保存、fetchone()は検索結果を1行取得、fetchall()は全件取得する処理だと整理した。
+後半では、StudentCreateは入力用、StudentResponseは出力用であることを確認した。response_model=StudentResponseはAPIから返すデータの形を決め、必要な項目が不足するとエラー、余計な項目は除外されることを学んだ。また、新しい生徒を追加する流れとして、POST受信 → Pydanticで入力チェック → INSERT → lastrowidでID取得 → commit() → StudentResponseで出力確認 → 201で返す、という全体像をコードと結びつけて確認した。
+Pydanticは、FastAPIで扱うデータの型・形・条件を決めてチェックする役割があり、入力だけでなく出力の確認にも使えることを整理した。
