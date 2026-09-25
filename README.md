@@ -613,3 +613,6 @@ INSERTでは、studentsテーブルのname列に値を追加し、VALUES (?)と1
 今日はSQLite操作の基本と、FastAPI・Pydantic・Response Modelの流れを復習した。connect()はDB接続、cursor()はSQL操作役、execute()はSQL実行、commit()は変更の確定・保存、fetchone()は検索結果を1行取得、fetchall()は全件取得する処理だと整理した。
 後半では、StudentCreateは入力用、StudentResponseは出力用であることを確認した。response_model=StudentResponseはAPIから返すデータの形を決め、必要な項目が不足するとエラー、余計な項目は除外されることを学んだ。また、新しい生徒を追加する流れとして、POST受信 → Pydanticで入力チェック → INSERT → lastrowidでID取得 → commit() → StudentResponseで出力確認 → 201で返す、という全体像をコードと結びつけて確認した。
 Pydanticは、FastAPIで扱うデータの型・形・条件を決めてチェックする役割があり、入力だけでなく出力の確認にも使えることを整理した。
+
+2026/09/25 
+今日はPythonとSQLで、80点以上の人の抽出と人数の集計を復習した。Pythonでは条件に合うたびに count = count + 1 で人数を増やし、SQLでは COUNT(*) で数える。次回はPythonのカウント処理を復習する。
