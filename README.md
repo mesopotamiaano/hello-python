@@ -616,3 +616,9 @@ Pydanticは、FastAPIで扱うデータの型・形・条件を決めてチェ�
 
 2026/09/25 
 今日はPythonとSQLで、80点以上の人の抽出と人数の集計を復習した。Pythonでは条件に合うたびに count = count + 1 で人数を増やし、SQLでは COUNT(*) で数える。次回はPythonのカウント処理を復習する。
+
+2026/9/25 学習レジュメ
+今日はCRUD、Pydantic、Response Modelの復習から始め、StudentCreateは入力用、StudentResponseは出力用、response_modelは返すデータの形を決めるものだと整理した。fetchone()は1行、fetchall()は全件取得、commit()はDBへの変更を確定、lastrowidは最後に追加した行のIDを取得することも確認した。
+その後、AS、JOIN、row / rows、list[StudentResponse]を復習した。ASは別名を付ける、JOINは別テーブルを関連するIDで結合する、rowは1行、rowsは複数行全体という違いを確認した。また、SELECT s.id, s.name, sc.scoreで取得した結果をrow[0] / row[1] / row[2]として辞書化し、list[StudentResponse]で複数人分の出力を管理する流れを実際に動かした。
+後半はSQLの条件検索を練習し、>=、<=、ASC、DESC、BETWEENを使って、70点以上、75〜90点などの範囲検索を書いた。最後に/students/range/{min_score}/{max_score}という新しいGET APIを作成し、URLから2つの値を受け取り、SQLのBETWEENで範囲検索して複数人を返す処理まで完成させた。
+途中で500エラーが出たが、関数名の違いやsc.scoreのスペルミスを確認して修正し、最終的にGET /students/range/75/90で200レスポンスが返るところまで確認できた。SQL部分はかなり自力で書けるようになってきた一方、FastAPIのルート定義や関数の配置はまだ見ながらの方が安定するため、次回もそこを重点的に復習する。
