@@ -622,3 +622,9 @@ Pydanticは、FastAPIで扱うデータの型・形・条件を決めてチェ�
 その後、AS、JOIN、row / rows、list[StudentResponse]を復習した。ASは別名を付ける、JOINは別テーブルを関連するIDで結合する、rowは1行、rowsは複数行全体という違いを確認した。また、SELECT s.id, s.name, sc.scoreで取得した結果をrow[0] / row[1] / row[2]として辞書化し、list[StudentResponse]で複数人分の出力を管理する流れを実際に動かした。
 後半はSQLの条件検索を練習し、>=、<=、ASC、DESC、BETWEENを使って、70点以上、75〜90点などの範囲検索を書いた。最後に/students/range/{min_score}/{max_score}という新しいGET APIを作成し、URLから2つの値を受け取り、SQLのBETWEENで範囲検索して複数人を返す処理まで完成させた。
 途中で500エラーが出たが、関数名の違いやsc.scoreのスペルミスを確認して修正し、最終的にGET /students/range/75/90で200レスポンスが返るところまで確認できた。SQL部分はかなり自力で書けるようになってきた一方、FastAPIのルート定義や関数の配置はまだ見ながらの方が安定するため、次回もそこを重点的に復習する。
+
+2026/9/27 学習レジュメ
+今日は昨日作った点数範囲検索APIを中心に、FastAPIのルート定義とDB関数のつながりを復習した。ASは別名を付ける、JOINはテーブル同士を結合する、fetchone()は1行取得、fetchall()は検索結果全体を取得することを確認した。また、StudentCreateは入力用、StudentResponseは出力用、list[StudentResponse]は複数人分の出力に使うことも整理した。
+PC実践では、get_students_by_score_range(min_score, max_score)をほぼ自力で再構築し、SELECT、JOIN、BETWEEN、ORDER BY DESC、fetchall()、conn.close()まで書けた。一方、最後のreturn convert_rows_to_students(rows)はまだ見ないと出にくかったため、今後の復習ポイントになった。
+FastAPI側では、/students/range/{min_score}/{max_score}、response_model=list[StudentResponse]、min_score: int、max_score: int、return get_students_by_score_range(min_score, max_score)という流れを分解して練習した。最初は見ないと難しかったが、穴埋め形式にすると正しく書けるようになった。
+最後に応用として、指定点以上の生徒を取得するget_students_over_score(score)を書いた。WHERE sc.score >= ?やORDER BY sc.score DESCは見ずに書けたが、JOIN scores AS sc、(score,)、convert_rows_to_students(rows)など関数名・変数名のつなぎ部分ではミスがあった。現状は、SQL本体はかなり自力で書ける一方、FastAPIのルート定義と関数同士の接続部分はまだ反復が必要という段階。次回はそこを重点的に復習する。
