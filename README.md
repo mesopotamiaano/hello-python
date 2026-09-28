@@ -628,3 +628,8 @@ Pydanticは、FastAPIで扱うデータの型・形・条件を決めてチェ�
 PC実践では、get_students_by_score_range(min_score, max_score)をほぼ自力で再構築し、SELECT、JOIN、BETWEEN、ORDER BY DESC、fetchall()、conn.close()まで書けた。一方、最後のreturn convert_rows_to_students(rows)はまだ見ないと出にくかったため、今後の復習ポイントになった。
 FastAPI側では、/students/range/{min_score}/{max_score}、response_model=list[StudentResponse]、min_score: int、max_score: int、return get_students_by_score_range(min_score, max_score)という流れを分解して練習した。最初は見ないと難しかったが、穴埋め形式にすると正しく書けるようになった。
 最後に応用として、指定点以上の生徒を取得するget_students_over_score(score)を書いた。WHERE sc.score >= ?やORDER BY sc.score DESCは見ずに書けたが、JOIN scores AS sc、(score,)、convert_rows_to_students(rows)など関数名・変数名のつなぎ部分ではミスがあった。現状は、SQL本体はかなり自力で書ける一方、FastAPIのルート定義と関数同士の接続部分はまだ反復が必要という段階。次回はそこを重点的に復習する。
+
+2026/9/28 学習レジュメ
+今日は短時間で、FastAPIのルート定義とDB検索関数のつながりを重点的に復習した。StudentCreateは入力用、StudentResponseは出力用、list[StudentResponse]は複数人分の出力に使うことを確認した。また、fetchone()は検索結果を1行取得、fetchall()は検索結果全体を取得する処理だと整理した。
+後半では、/students/over/{score} の流れを確認した。FastAPI側のread_students_over_score(score)でURLから点数を受け取り、DB検索用のget_students_over_score(score)へ渡す。その後、SQLで指定点以上を検索し、fetchall()で複数行を取得、convert_rows_to_students(rows)で辞書のリストに変換し、list[StudentResponse]として返す流れを復習した。
+今回の課題は、FastAPI側の関数read_students_over_score()と、DB検索側のget_students_over_score()が混ざりやすい点だった。今後は「FastAPI側は受付、DB関数側は検索」という役割分担を意識して反復する。
