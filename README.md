@@ -633,3 +633,8 @@ FastAPI側では、/students/range/{min_score}/{max_score}、response_model=list
 今日は短時間で、FastAPIのルート定義とDB検索関数のつながりを重点的に復習した。StudentCreateは入力用、StudentResponseは出力用、list[StudentResponse]は複数人分の出力に使うことを確認した。また、fetchone()は検索結果を1行取得、fetchall()は検索結果全体を取得する処理だと整理した。
 後半では、/students/over/{score} の流れを確認した。FastAPI側のread_students_over_score(score)でURLから点数を受け取り、DB検索用のget_students_over_score(score)へ渡す。その後、SQLで指定点以上を検索し、fetchall()で複数行を取得、convert_rows_to_students(rows)で辞書のリストに変換し、list[StudentResponse]として返す流れを復習した。
 今回の課題は、FastAPI側の関数read_students_over_score()と、DB検索側のget_students_over_score()が混ざりやすい点だった。今後は「FastAPI側は受付、DB関数側は検索」という役割分担を意識して反復する。
+
+2026/9/29 学習レジュメ
+今日は、FastAPI側の関数とDB検索側の関数の役割を重点的に復習した。read_students_over_score(score)はFastAPI側でURLから値を受け取る受付役、get_students_over_score(score)は実際にDB検索を行う関数だと整理した。
+また、fetchone()は検索結果を1行取得、fetchall()は複数行をすべて取得し、convert_rows_to_students(rows)でタプルのリストを辞書のリストに変換する流れを確認した。
+FastAPI側では、1人分を返す場合はStudentResponse、複数人を返す場合はlist[StudentResponse]を使うことを復習した。今回はほとんど正しく答えられており、特にread_...とget_...の役割分担、fetchall()から辞書リストへ変換する流れがかなり定着してきた。
