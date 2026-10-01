@@ -642,3 +642,8 @@ FastAPI側では、1人分を返す場合はStudentResponse、複数人を返す
 2026/9/30 学習レジュメ
 今日は、FastAPI側のread_students_over_score()とDB検索側　get_students_over_score()の役割を復習した。fetchone()は1行、fetchall()は複数行を取得し、convert_rows_to_students(rows)でタプルのリストを辞書のリストに変換する流れも確認した。
 また、複数人を返すときはlist[StudentResponse]を使い、処理の流れは FastAPIでscore受取 → DB関数呼出 → SQL検索 → fetchall → 辞書リスト変換 → 出力確認 → ブラウザへ返す と整理した。
+
+2026/10/1 学習レジュメ
+今日は、これまで作ったFastAPIとSQLiteの流れを復習しつつ、/students/over/{score}という新しいGET APIを追加した。read_students_over_score()はFastAPI側、get_students_over_score()はDB検索側という役割分担を確認した。
+SQLでは、WHERE sc.score >= ?で指定点以上を抽出し、ORDER BY sc.score DESCで高い順に並べる処理を書いた。fetchall()で複数行を取得し、convert_rows_to_students(rows)でタプルのリストを辞書のリストに変換し、list[StudentResponse]として返す流れも確認した。
+途中ではJOIN scores AS sc、(score,)、s.idなど細かい部分にミスはあったが、SQLの骨組みやfetchall()、conn.close()、変換処理はかなり自力で書けるようになってきた。最後はSwaggerで/students/over/80を実行し、80点以上の生徒が高い順に返ることを確認して、200レスポンスまで成功した。
