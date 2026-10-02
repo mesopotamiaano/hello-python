@@ -544,57 +544,38 @@ FastAPIでは@app.delete("/students/{student_id}")を使い、Swagger UIからID
 2026/9/1 学習レジュメ
 
 今日はCRUDの定着を目的に、SQLとSQLite操作の検索練習・穴埋め・自力記述を行った。connect＝DB接続、cursor＝SQL操作役、execute＝SQL実行、fetchall()＝検索結果をすべて取得、commit()＝変更の確定、lastrowid＝最後に追加した行のID取得を復習した。
-
 UPDATEでは、UPDATE → SET → WHEREの基本構造を確認し、ID=3の生徒を95点に更新するSQLをほぼ自力で書けた。DELETEでも、DELETE FROM → WHEREという構造を確認し、IDを指定して削除する処理を練習した。
-
 最後にINSERTを復習し、INSERT INTO students (name) VALUES (?)はstudentsテーブルのname列に値を追加する意味で、("Kato",)の,は1要素のタプルを作るためだと整理した。
-
 現在は、SQLの基本構造は見ずにある程度書けるようになってきた一方、execute()の中への書き方、テーブル名、カンマなど細かい部分はまだ抜けるため、次回も穴埋めと部分的な自力記述を続けて定着させる。
 
 2026/9/3 学習レジュメ
-
 今日はCRUDの定着を目的に、SQLの検索練習・穴埋め・自力記述を行った。cursor.execute()には「SQL文」と「?に渡す値」をセットで入れることを確認し、INSERT・UPDATE・DELETEの基本構造を繰り返し練習した。
-
 INSERTでは、studentsテーブルのname列に値を追加し、VALUES (?)と1要素タプルを使ってPython側の値をSQLへ渡す流れを確認した。UPDATEではUPDATE → SET → WHERE、DELETEではDELETE FROM → WHEREの形を自力でかなり書けるようになった。
-
 2セット目では、add_student()の流れを分解し、名前を追加→lastrowidでID取得→IDと点数をscoresへ追加→commit()で保存→returnで辞書をFastAPI側へ返す流れを確認した。現在はSQLの骨格はかなり自力で書けるようになっており、今後はexecute()のカンマやテーブル名など細かい部分を反復して定着させる。
 
 2026/9/14 学習レジュメ
-
 今日はFastAPIのエラー処理とCRUDの復習を行った。新しくHTTPExceptionを使い、UPDATEやDELETEの前にSELECTとfetchone()で指定IDの生徒が存在するか確認し、存在しない場合は404 Student not foundを返す処理を実装した。fetchone()は1件取得し、見つからない場合はNoneになることも確認した。
-
 後半はCRUDを復習し、Create＝INSERT / POST、Read＝SELECT / GET、Update＝UPDATE / PUT、Delete＝DELETE / DELETEという対応を整理した。CRUDの意味やSQLの骨格はかなり残っている一方、HTTPメソッドやfetchone()・fetchall()など細部はまだ混ざるため、今後も穴埋めと自力記述を繰り返して定着させる。
 
 2026/9/15 学習レジュメ
-
 今日はCRUDと404エラー処理を10分で復習した。FastAPIではCreate＝POST、Read＝GET、Update＝PUT、Delete＝DELETEと対応することを確認した。また、fetchone()は検索結果を1行取得し、対象が見つからない場合はNoneになることを復習した。
 
 2026/9/17 学習レジュメ
-
 今日はCRUDとHTTPステータスコードの復習・実践を行った。最初に、Create＝POST / INSERT、Read＝GET / SELECT、Update＝PUT / UPDATE、Delete＝DELETE / DELETEという対応を確認した。また、fetchone()は検索結果を1行取得し、見つからない場合はNoneになること、fetchall()は検索結果をすべて取得すること、commit()はDBへの変更を確定・保存することを復習した。
-
 その後、HTTPステータスコードを学び、200は一般的な成功、201は新規作成成功、404は指定したデータが見つからない、422は入力データの型や内容に問題がある場合に返ることを確認した。POST /students に status_code=201 を追加し、Kato・85点を登録したところ、実際に201が返ることを確認できた。
-
 さらに、score: int に対して "abc" を送信し、FastAPI / PydanticがDB処理に入る前の入力チェック段階で処理を止め、422を返すことをSwagger UIで確認した。現在はCRUDの意味と基本構造はかなり定着しており、今後はHTTPステータスコードとFastAPI側の処理をコードと結びつけて覚えていく段階。
 
 2026/9/18 学習レジュメ
-
 今日はCRUDとHTTPステータスコードを20分で復習した。Create＝INSERT / POST、Read＝SELECT / GET、Update＝UPDATE / PUT、Delete＝DELETE / DELETEの対応を確認した。また、fetchone()は検索結果を1行取得し、見つからない場合はNoneになること、404はデータが見つからない、422は入力データの型や内容に問題がある場合に返ることを復習した。
-
 最初はPOSTとPUTが少し混ざったが、最後にはPOST＝新規追加、PUT＝更新、POST成功＝201、存在しないID＝404、型エラー＝422まで正しく整理できた。
 
 2026/9/19 学習レジュメ
-
 今日はCRUD・HTTPステータスコードを復習し、Create＝INSERT / POST、Read＝SELECT / GET、Update＝UPDATE / PUT、Delete＝DELETE / DELETEの対応を確認した。fetchone()は検索結果を1行取得し、見つからない場合はNone、fetchall()は検索結果をすべて取得することも復習した。
-
 後半はPydanticの値チェックを学び、score: int = Field(ge=0, le=100)で、scoreを整数かつ0以上100以下に制限できることを確認した。ge=0は0以上、le=100は100以下を意味し、85は通るが、-10や150は不正な値として弾ける。Pydanticは型だけでなく、値の範囲もチェックできることを学んだ。
 
 2026/9/20 学習レジュメ
-
 今日はまずCRUD、FastAPI、HTTPステータスコード、Pydanticの復習を行った。SQLはデータベースを操作するための言語で、FastAPIはブラウザやアプリからの要求を受け取り、Pythonの処理結果を返す仕組みであることを確認した。CRUDは、Create＝INSERT / POST、Read＝SELECT / GET、Update＝UPDATE / PUT、Delete＝DELETE / DELETEという対応を復習した。また、fetchone()は検索結果を1行取得し、fetchall()は検索結果をすべて取得すること、commit()はDBへの変更を確定・保存することも確認した。
-
 後半ではPydanticの入力チェックを進めた。Fieldを使って、名前は1文字以上20文字以下、点数は0以上100以下に制限する設定を追加した。name=""を送ると422、score=150を送っても422になることをSwagger UIで実際に確認できた。途中でmin_lengthをmim_lengthと書いていたスペルミスが原因で空文字が通ってしまったが、保存先、クラスの重複、読み込み状態、Schemaの確認まで順番に切り分けて原因を特定できた。
-
 今日の重要点は、Pydanticは型だけでなく値の範囲や文字数もチェックでき、不正なデータをDBに入る前に422で止められるということ。次回はこの入力チェックを軽く復習してから、FastAPIの次の内容へ進めればよい。
 
 2026/9/21 学習レジュメ
@@ -647,3 +628,8 @@ FastAPI側では、1人分を返す場合はStudentResponse、複数人を返す
 今日は、これまで作ったFastAPIとSQLiteの流れを復習しつつ、/students/over/{score}という新しいGET APIを追加した。read_students_over_score()はFastAPI側、get_students_over_score()はDB検索側という役割分担を確認した。
 SQLでは、WHERE sc.score >= ?で指定点以上を抽出し、ORDER BY sc.score DESCで高い順に並べる処理を書いた。fetchall()で複数行を取得し、convert_rows_to_students(rows)でタプルのリストを辞書のリストに変換し、list[StudentResponse]として返す流れも確認した。
 途中ではJOIN scores AS sc、(score,)、s.idなど細かい部分にミスはあったが、SQLの骨組みやfetchall()、conn.close()、変換処理はかなり自力で書けるようになってきた。最後はSwaggerで/students/over/80を実行し、80点以上の生徒が高い順に返ることを確認して、200レスポンスまで成功した。
+
+2026/10/2 学習レジュメ
+今日は、指定点以下の生徒を取得するGET APIを復習した。DB側ではWHERE sc.score <= ?で指定点以下を抽出し、ORDER BY sc.score ASCで低い順に並べ、fetchall()で複数行を取得してconvert_rows_to_students(rows)で辞書のリストに変換する流れを確認した。
+FastAPI側では、read_students_under_score()からget_students_under_score()を呼び出す流れを練習した。今回は、JOIN scores AS scと書くところをstudentsとしてしまった点、複数人を返すためresponse_model=list[StudentResponse]が必要な点が復習ポイントになった。
+全体として、SQLの<=・ASC・fetchall()・変換処理はかなり定着してきており、今後はテーブル名、関数名、response_modelなど細かい接続部分の正確さを重点的に固める。
