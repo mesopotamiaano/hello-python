@@ -638,3 +638,7 @@ FastAPI側では、read_students_under_score()からget_students_under_score()�
 今日は、under / over / range の3種類の検索APIを通して、FastAPI側とDB検索側のつながりを重点的に復習した。read_... はFastAPI側の受付、get_... はDB検索側という役割を確認し、fetchall()で複数行を取得し、convert_rows_to_students(rows)でタプルのリストを辞書のリストに変換する流れも整理した。
 PC実践では、get_students_under_score(score)をかなり自力で書けた。JOIN scores AS sc、WHERE sc.score <= ?、ORDER BY sc.score ASC、fetchall()、conn.close()、convert_rows_to_students(rows)まで正しくつなげられた。一方で、cursor.execute()を閉じる)、response_modelの表記、StudentResponseのクラス名など、細かい記述ミスが残った。
 全体として、SQLの骨組みとDB処理はかなり定着してきており、今後は 関数名・クラス名・引数名・括弧など細部の正確さ を重点的に固める段階に入っている。
+
+2026/10/4 学習レジュメ
+今日は、PythonとSQLで「500円以下の商品を取り出す・数える」練習をした。Pythonではproduct["price"]で価格を取り出し、ifで条件を判定する。ifの末尾の:と字下げに注意する。
+SQLでは、productsがテーブル名、priceが列名。COUNT(*)で件数を数え、WHERE price <= 500で条件を指定する。価格の条件にscoreを使わないことと、<=は境界の値も含むことを確認した。
