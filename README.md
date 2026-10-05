@@ -642,3 +642,8 @@ PC実践では、get_students_under_score(score)をかなり自力で書けた�
 2026/10/4 学習レジュメ
 今日は、PythonとSQLで「500円以下の商品を取り出す・数える」練習をした。Pythonではproduct["price"]で価格を取り出し、ifで条件を判定する。ifの末尾の:と字下げに注意する。
 SQLでは、productsがテーブル名、priceが列名。COUNT(*)で件数を数え、WHERE price <= 500で条件を指定する。価格の条件にscoreを使わないことと、<=は境界の値も含むことを確認した。
+
+2026/10/5 
+今日は、PythonとSQLで400円以下の商品を扱う練習をした。Pythonではproduct["price"]で価格を取り出し、<= 400で条件を判定する。価格で判定し、product["name"]で名前を表示するように、使う値を区別する。辞書の取り出しは[]、表示はprint()を使う。
+
+SQLでは、SELECT COUNT(*) FROM products WHERE price <= 400;で条件に合う商品数を数える文を、自分で正しく書けた。
