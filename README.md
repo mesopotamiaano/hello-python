@@ -647,3 +647,11 @@ SQLでは、productsがテーブル名、priceが列名。COUNT(*)で件数を�
 今日は、PythonとSQLで400円以下の商品を扱う練習をした。Pythonではproduct["price"]で価格を取り出し、<= 400で条件を判定する。価格で判定し、product["name"]で名前を表示するように、使う値を区別する。辞書の取り出しは[]、表示はprint()を使う。
 
 SQLでは、SELECT COUNT(*) FROM products WHERE price <= 400;で条件に合う商品数を数える文を、自分で正しく書けた。
+
+2026/10/6 学習レジュメ
+
+今日は、FastAPI側とDB検索側の役割分担を中心に復習した。read_students_under_score()はFastAPI側、get_students_under_score()はDB検索側で、FastAPIがURLから値を受け取り、DB関数へ渡し、SQL検索結果を返す流れを確認した。fetchone()は1行、fetchall()は複数行を取得し、convert_rows_to_students(rows)でタプルのリストを辞書のリストへ変換することも復習した。
+
+SQLでは、ASで別名を付け、JOINでstudentsとscoresを結合し、ON s.id = sc.student_idで対応する生徒と点数をつなげる処理を確認した。また、WHEREで点数条件を指定し、ORDER BY ... DESCで高い順に並べる流れも練習した。
+
+後半は別の「学生検索API」のチャットで続けて学習し、名前と点数をJOINして条件検索するSQLや、FastAPIから検索結果を返す流れを復習した。全体としてSQLの意味はかなり理解できている一方、FastAPI側の関数名・response_model・型指定・コードの細かい接続部分はまだ反復が必要な段階。
