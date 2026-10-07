@@ -655,3 +655,11 @@ SQLでは、SELECT COUNT(*) FROM products WHERE price <= 400;で条件に合う�
 SQLでは、ASで別名を付け、JOINでstudentsとscoresを結合し、ON s.id = sc.student_idで対応する生徒と点数をつなげる処理を確認した。また、WHEREで点数条件を指定し、ORDER BY ... DESCで高い順に並べる流れも練習した。
 
 後半は別の「学生検索API」のチャットで続けて学習し、名前と点数をJOINして条件検索するSQLや、FastAPIから検索結果を返す流れを復習した。全体としてSQLの意味はかなり理解できている一方、FastAPI側の関数名・response_model・型指定・コードの細かい接続部分はまだ反復が必要な段階。
+
+2026/10/7 学習レジュメ
+
+今日はGET系APIの復習から始め、under / over / range の検索処理をかなり自力で書けることを確認した。JOIN scores AS sc、WHERE、ASC / DESC、fetchall()、list[StudentResponse]、score: intなど、以前ミスしやすかった部分もかなり安定してきた。
+
+後半はPOSTに進み、StudentCreateは入力用、StudentResponseは出力用と整理した。INSERT INTO studentsで名前を追加し、cursor.lastrowidで新しく作った生徒IDを取得、そのIDと点数をscoresへINSERTし、commit()で確定する流れを学んだ。
+
+FastAPI側では、create_student()が入力を受け取る受付役、add_student()がDBへ追加する処理を担当することを確認した。また、status_code=201は「新規作成に成功したら201 Createdを返す」という意味だと理解した。次回はPOSTのadd_student()とcreate_student()を自力で書けるように反復する。
