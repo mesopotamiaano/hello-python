@@ -663,3 +663,13 @@ SQLでは、ASで別名を付け、JOINでstudentsとscoresを結合し、ON s.i
 後半はPOSTに進み、StudentCreateは入力用、StudentResponseは出力用と整理した。INSERT INTO studentsで名前を追加し、cursor.lastrowidで新しく作った生徒IDを取得、そのIDと点数をscoresへINSERTし、commit()で確定する流れを学んだ。
 
 FastAPI側では、create_student()が入力を受け取る受付役、add_student()がDBへ追加する処理を担当することを確認した。また、status_code=201は「新規作成に成功したら201 Createdを返す」という意味だと理解した。次回はPOSTのadd_student()とcreate_student()を自力で書けるように反復する。
+
+2026/10/8 学習レジュメ
+
+今日はFastAPIのPOST処理を重点的に復習した。StudentCreateは入力用、StudentResponseは出力用であり、create_student()がFastAPI側、add_student()がDB側の関数であることを確認した。
+
+PC実践では、INSERT INTO studentsで名前を追加し、cursor.lastrowidで新しいIDを取得、INSERT INTO scoresで点数を登録し、commit()で保存する流れを練習した。処理の順番は理解できているが、(name,)、(student_id, score)、cursor.lastrowid、関数名や括弧などの記述にはまだ課題が残った。
+
+また、Swaggerから入力するのはnameとscoreであり、idはDB側で自動生成されることを理解した。student.nameとstudent.scoreは、受け取った生徒データから名前と点数を取り出してDB関数に渡すために使う。
+
+次回はPOSTのコードを穴埋めと自力記述で反復し、Swaggerで201 Createdを確認することを目標にする。
