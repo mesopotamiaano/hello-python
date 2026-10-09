@@ -1,4 +1,5 @@
 
+
 # hello-python
 
 今日できたこと
@@ -673,3 +674,29 @@ PC実践では、INSERT INTO studentsで名前を追加し、cursor.lastrowidで
 また、Swaggerから入力するのはnameとscoreであり、idはDB側で自動生成されることを理解した。student.nameとstudent.scoreは、受け取った生徒データから名前と点数を取り出してDB関数に渡すために使う。
 
 次回はPOSTのコードを穴埋めと自力記述で反復し、Swaggerで201 Createdを確認することを目標にする。
+
+2026/10/9 学習レジュメ（45分×2セット・計90分）
+
+今日はFastAPIのPOST（追加）の復習と、PUT（更新）の新規学習を行った。
+
+1セット目：POSTの復習と実践
+
+StudentCreateが入力用、StudentResponseが出力用であることを確認した。DB側のadd_student()をほぼ自力で記述でき、INSERT、cursor.lastrowid、commit()の使い方を復習した。特に、IDは自分で入力するのではなく、DBが自動生成することを再確認した。
+
+SwaggerではPOSTの201 Createdを確認し、追加した生徒をGETで取得することにも成功した。POSTからDB保存、GETによる取得までの一連の流れを理解できた。
+
+2セット目：PUTの学習と実践
+
+新しくPUTを学習し、SQLのUPDATE、SET、WHEREの役割を理解した。DB側のupdate_student_score()をほぼ自力で記述でき、FastAPI側のPUTとの接続も練習した。
+
+既存のmain.pyには、生徒IDの存在確認と、存在しない場合に404エラーを返す処理が実装されていることも学んだ。SwaggerでID14のSatoの点数を85点から95点に更新し、GETで変更が保存されていることを確認できた。
+
+また、パスパラメータとクエリパラメータの違いを重点的に学習した。パスは主に対象の指定、クエリは検索条件などの指定に使われること、intやstrは受け取るデータの型を指定することを理解した。
+
+現在の課題と次回の予定
+
+GETは比較的安定し、POSTも実装・動作確認までできるようになった。一方、PUTはまだコードを完全に覚えきれていないため、次回も45分間、PCでの自力記述を中心に復習する。
+
+その後、DELETE（削除）を学習し、最後にCRUD全体を使った軽い総合アウトプット演習を行う。
+
+現在の進捗：CRUDの4機能のうち、GET・POST・PUTの3機能を学習済み。残りはDELETE。
