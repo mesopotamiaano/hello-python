@@ -736,3 +736,11 @@ Python・SQLiteを使い、CRUD（作成・取得・更新・削除）の基本�
 今後は新しい知識を急いで増やすのではなく、何も見ずにコードを書ける状態を目指す。
 
 特にPython関数とFastAPIを重点的に復習し、CRUD全体を自力で実装できるようにする。
+
+10/11 学習レジュメ
+
+今日はFastAPIのPUT（更新）をPCで復習した。update_student_score()を自力で記述し、SQLのUPDATE・SET・WHERE、変数名、引数の順番などの間違いを修正した。
+
+また、FastAPI側の@app.put()も練習し、student_idは更新対象のID、new_scoreは変更後の点数であることを再確認した。
+
+今後の課題は、SQLの書式とFastAPIの関数を見ずに正確に書けるようにすること。次回もPUTを復習し、定着したらDELETEへ進む。
