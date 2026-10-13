@@ -754,3 +754,11 @@ Swaggerでは存在しないIDを指定し、404 Not Foundが正しく返るこ�
 後半はDELETE（削除）の基礎を学習した。DELETE FROMとWHEREの役割、2つのテーブルからデータを削除する必要性、commit()による保存を理解した。
 
 次回はDELETEのPC実践を行い、その後CRUD全体の総合アウトプットに進む。
+
+10/13 学習レジュメ
+
+今日はCRUD最後のDELETE（削除）を中心に学習した。PCでdelete_student()を自力記述し、SELECTによる存在確認、fetchone()、404エラー処理、2つのテーブルからのDELETE、commit()まで一連の流れを練習した。
+
+途中で変数名や括弧、returnの記述にミスがあったが、修正を重ねて基本的なコードを組み立てられた。また、DELETEはデータを削除する処理、returnは結果を返す処理であることを確認した。
+
+次回の課題は、SwaggerでDELETEの動作確認を行うこと。その後、GET・POST・PUT・DELETEを組み合わせた軽いCRUD総合アウトプットに進む。
