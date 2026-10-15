@@ -772,3 +772,13 @@ Swaggerでテスト用の生徒をPOSTで追加し、DELETEで削除した後、
 後半はCRUDの総合アウトプットを行い、POST・GET・PUT・DELETEとSQL命令の対応を全問正解した。一方、FastAPI側とDB側の関数名、URLのパスパラメータの書き方にはまだ課題が残った。
 
 次回はPCでCRUD全体の軽い総合実装演習を行い、コードを自力で書く力を定着させる。
+
+10/15 学習レジュメ
+
+今日はCRUDの総合アウトプットとして、GET（取得）とPOST（追加）をPCで自力記述した。
+
+GETでは、SQLのSELECT・JOIN・WHERE・ORDER BY、fetchall()、FastAPIのresponse_modelまでほぼ自力で書くことができ、理解が定着してきた。
+
+POSTでは、処理の流れは覚えていたものの、INSERT INTOのSQL構文や変数名にミスがあった。修正を重ねてコードを完成させ、lastrowidによるID取得、2つのテーブルへの追加、StudentCreateとStudentResponseの役割を復習した。
+
+今後の課題は、POSTのSQL構文を見ずに書けるようにすること。次回はPUT・DELETEの総合アウトプットにも取り組み、CRUD全体の定着を目指す。
