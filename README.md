@@ -782,3 +782,13 @@ GETでは、SQLのSELECT・JOIN・WHERE・ORDER BY、fetchall()、FastAPIのresp
 POSTでは、処理の流れは覚えていたものの、INSERT INTOのSQL構文や変数名にミスがあった。修正を重ねてコードを完成させ、lastrowidによるID取得、2つのテーブルへの追加、StudentCreateとStudentResponseの役割を復習した。
 
 今後の課題は、POSTのSQL構文を見ずに書けるようにすること。次回はPUT・DELETEの総合アウトプットにも取り組み、CRUD全体の定着を目指す。
+
+10/16 学習レジュメ
+
+今日はCRUD総合アウトプットの後半として、PUT（更新）とDELETE（削除）を復習した。
+
+PUTでは、DB接続、SELECTによる存在確認、fetchone()、404エラー処理、UPDATE、FastAPIとの接続までPCで自力記述した。SQL構文や変数名にミスがあったが、修正を重ねて基本コードを完成させた。
+
+DELETEでは、2つのテーブルから削除するSQLとFastAPIの関数呼び出しを復習した。
+
+現在の課題は、SQLの列名とPythonの変数名を正確に使い分けること。次回はCRUD全体の短い復習テストを行い、苦手部分を定着させた後、Git・GitHubの学習に進む予定。
