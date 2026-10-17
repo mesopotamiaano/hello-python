@@ -792,3 +792,29 @@ PUTでは、DB接続、SELECTによる存在確認、fetchone()、404エラー�
 DELETEでは、2つのテーブルから削除するSQLとFastAPIの関数呼び出しを復習した。
 
 現在の課題は、SQLの列名とPythonの変数名を正確に使い分けること。次回はCRUD全体の短い復習テストを行い、苦手部分を定着させた後、Git・GitHubの学習に進む予定。
+
+Python・SQL・FastAPI 学習レジュメ（2026/10/17）
+
+本日は45分×3セット、合計135分の学習を実施した。
+
+第1セット：POSTの復習
+
+CRUDの確認テストで10問中9問正解。POSTのDB関数を自力で記述し、INSERT、lastrowid、commit、closeの処理を確認した。また、StudentCreateによる入力データの受け取り方、リクエストボディ、FastAPI側とDB側の関数の役割を復習した。
+
+第2セット：PUTの復習・実践
+
+UPDATEのSQL構文を自力で修正し、update_student_score()を記述した。cursorの作成、fetchone()による存在確認、404エラー処理で間違いがあったが、ヒントをもとに修正できた。また、データベースの接続先やimportに関するエラーも解決し、更新関数の実行に成功した。
+
+第3セット：PUTの動作確認・DELETEの復習
+
+SwaggerからPUTを実行し、HTTP 200を確認。SQLiteでも更新後の85点が保存されていることを確認できた。
+
+DELETEでは、scoresテーブルとstudentsテーブルの削除順序、WHEREの条件、Pythonの変数名とSQLの列名の違いを復習した。commit・close、存在確認、404エラー処理まで記述できたが、DELETEの実行確認は未実施。
+
+本日の評価・課題
+
+CRUDの基本的な処理の流れは理解が進んでいる。特にPUTは、FastAPIからSQLiteへの更新と保存確認まで成功した。一方、関数全体の自力記述、変数の扱い、処理順序にはまだ不安定な部分がある。
+
+次回の予定
+
+DELETEのSwagger動作確認とSQLiteでの削除結果確認を行い、その後CRUD全体の小規模な総合演習に進む。
