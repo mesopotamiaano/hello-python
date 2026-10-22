@@ -1253,3 +1253,318 @@ Gitについては、基本コマンドの定着後、.gitignore・GitHubへのp
 将来的なバックエンドエンジニアのインターン応募、さらにAI・ロボティクス分野への進路につなげるため、コードを書く能力と開発管理能力の両方を高める。
 
 次回の最優先課題：Gitの自力再現と、CRUDの知識定着。
+
+プログラミング学習レジュメ｜2026年10月22日
+
+学習テーマ：Git・SQL・CRUDのノート整理と、FastAPI・Pydanticの理解
+
+① 本日の学習目標
+
+これまで学習したGit・PowerShell・SQL・CRUDの知識を整理し、資料を見なくてもコマンドや構文を思い出せるようにする。
+
+ノートを縦半分に折り、左側に問題、右側に答えを書くことで、今後の検索練習に活用できる形式にする。
+
+今回は新しい内容を進めるよりも、既習知識の定着を優先した。
+
+② 本日の学習内容
+
+1. Git・PowerShellのコマンド整理
+
+Gitの基本コマンドに加え、PowerShellで使用するフォルダ操作も整理した。
+
+PowerShell
+
+* mkdir：フォルダを作成
+* cd：フォルダを移動
+* cd ..：1つ上のフォルダに戻る
+* pwd：現在の場所を確認
+* notepad：メモ帳でファイルを開く
+
+Git
+
+* git init：リポジトリを初期化
+* git status：現在の状態を確認
+* git diff：変更内容を確認
+* git add：変更をステージング
+* git commit：変更履歴を記録
+* git log：過去の履歴を確認
+
+単にコマンド名を覚えるのではなく、使用目的・書き方・操作順序を関連付けて覚える方針とした。
+
+2. SQL・CRUDのノート整理
+
+CRUDの4つの基本操作と、それぞれに対応するSQL・HTTPメソッドを整理した。
+
+操作	SQL	HTTP
+Create	INSERT INTO	POST
+Read	SELECT	GET
+Update	UPDATE	PUT
+Delete	DELETE FROM	DELETE
+
+特に、以前学習した複数テーブルの結合と条件付き検索を重点的に確認した。
+
+cursor.execute(
+    """
+    SELECT s.id, s.name, sc.score
+    FROM students AS s
+    JOIN scores AS sc
+    ON s.id = sc.student_id
+    WHERE sc.score >= ?
+    ORDER BY sc.score DESC
+    """,
+    (80,)
+)
+rows = cursor.fetchall()
+
+SELECT・FROM・AS・JOIN・ON・WHERE・ORDER BYなどの意味を整理した。
+
+また、?によるプレースホルダーや、Pythonから値を渡すタプルの役割についても復習した。
+
+3. FastAPIのresponse_modelについて理解を深めた
+
+以前使用した以下の記述について質問し、使い分けを確認した。
+
+response_model=StudentResponse
+response_model=list[StudentResponse]
+
+StudentResponseは学生1件を返す場合、list[StudentResponse]は学生の一覧を返す場合に利用する。
+
+また、response_modelはGETやPOSTだけでなく、PUT・DELETEでも利用できるが、返すデータの形式に合わせて指定する必要があると理解した。
+
+4. CRUDとGitの今後の学習範囲を確認
+
+CRUDの基本操作は一通り実装経験があるものの、自力で一連のAPIを構築する力はまだ定着途中であることを確認した。
+
+Gitについても、現在のローカル操作に加えて、今後はGitHubとの連携、ブランチ管理、変更の取り消し、.gitignoreなどを学習する予定である。
+
+5. Pydanticの復習を次回課題に追加
+
+以前軽く学習したPydanticの内容を忘れていることに気づき、復習が必要と判断した。
+
+今後の学習対象として、以下を追加した。
+
+* BaseModelによるデータモデルの定義
+* StudentCreateとStudentResponseの違い
+* Field()による値の制限
+* response_modelとの関係
+* model_dump()による辞書への変換
+
+Pydanticの解説と復習カードは用意したが、本日は時間が終了したため、ノートへの記入と復習問題は翌日に持ち越した。
+
+③ 本日の進捗・評価
+
+学習項目	状況
+Gitのノート整理	完了
+PowerShellのコマンド整理	完了
+CRUD・SQLのノート整理	完了
+response_modelの理解	説明を確認
+Python・SQLiteのDB操作整理	次回以降
+HTTPException・404処理	次回以降
+FastAPIの構文整理	次回以降
+Pydanticの復習	次回予定
+
+良かった点
+
+1. 知識の定着を意識した学習に切り替えられた
+
+コマンドを繰り返し眺めるのではなく、答えを隠して思い出す形式のノート作成に取り組んだ。
+
+2. SQLとFastAPIの関連性を整理できた
+
+SQLの構文だけではなく、それぞれがCRUDのどの処理に対応するのかを整理した。
+
+3. 自分で不足している知識を発見できた
+
+response_modelの使い方やPydanticの記憶が曖昧になっていることに気づき、今後の復習課題として明確にできた。
+
+改善すべき点
+
+1. 自力想起の確認がまだ必要
+
+本日はノート整理が中心だったため、実際に資料なしでコードを記述できるかは十分に検証できていない。
+
+2. 個別知識をつなぐ練習が必要
+
+SQL・PythonのDB関数・Pydantic・FastAPIを、それぞれ単体で理解するだけでなく、一連のCRUD処理として組み合わせる練習が必要である。
+
+④ 本日の総合評価
+
+学習到達段階：既習知識の体系的な整理を進めた段階。自力再現力は今後検証する。
+
+本日はプログラムの実装を行っていないため、コードの記述能力そのものが向上したかは判断できない。
+
+一方で、GitとSQLの基本事項をノートに整理し、今後の検索練習に使える復習資料を作成できた点は成果である。
+
+知識を忘れることへの対策として、継続的に使える学習環境を整えた。
+
+⑤ 次回の学習予定｜10月23日
+
+第1部：Pydanticのノート整理
+
+BaseModel・Field・StudentCreate・StudentResponse・response_modelなどをまとめる。
+
+第2部：Pydanticの復習問題
+
+用意済みの復習カードを使い、理解できた部分と忘れていた部分を確認する。
+
+第3部：Python・SQLite・FastAPIの復習
+
+時間があれば、DB接続・cursor.execute()・fetchone()・fetchall()・HTTPExceptionによる404処理などを整理する。
+
+ノートの整理が終わり次第、短いコード記述問題へ移行する。
+
+⑥ 今後の学習方針
+
+Git・SQL・Python・Pydantic・FastAPIを個別に暗記するだけではなく、学生管理APIの作成という一つの目的に結び付けて理解する。
+
+今後は以下の順番で学習を進める。
+
+1. ノート整理による知識の体系化
+2. 検索練習による記憶の定着
+3. CRUDの自力実装
+4. Gitによる変更履歴の管理
+5. GitHubへの成果物公開
+
+次回の最優先課題：Pydanticの復習と、SQL・FastAPIの自力再現力の強化。
+
+プログラミング学習レジュメ｜2026年10月22日（第2セット）
+
+学習テーマ：Python・SQLite・FastAPI・HTTPExceptionのノート整理
+
+① 本日の学習目標
+
+1セット目に整理したGit・PowerShell・SQL・CRUDの知識に加え、Pythonからデータベースを操作する方法や、FastAPIでAPIを構築するための基本構文を整理する。
+
+ノートを縦半分に折り、左側に問題、右側に答えを書くことで、後日資料を見ずにコードを思い出せるようにする。
+
+② 本日の学習内容
+
+1. Python・SQLiteの基本操作
+
+PythonからSQLiteのデータベースを操作するための構文を整理した。
+
+主な学習内容：
+
+* sqlite3.connect()：データベースへの接続
+* conn.cursor()：カーソルの作成
+* cursor.execute()：SQLの実行
+* cursor.fetchone()：1行の取得
+* cursor.fetchall()：複数行の取得
+* cursor.lastrowid：直前にINSERTした行のID取得
+* conn.commit()：変更の確定
+* conn.close()：接続の終了
+* return：関数から結果を返す
+
+以前のCRUD実装で使用したコードを、役割ごとに整理した。
+
+2. HTTPExceptionと404エラー処理
+
+データベースに対象の学生が存在しない場合のエラー処理について整理した。
+
+row = cursor.fetchone()
+if row is None:
+    conn.close()
+    raise HTTPException(
+        status_code=404,
+        detail="Student not found"
+    )
+
+if row is Noneによる条件分岐、raiseによる例外の発生、HTTPExceptionの役割を復習した。
+
+また、404エラーが対象データの不存在を表すことを確認した。
+
+3. FastAPIの基本構文
+
+CRUDとHTTPメソッドの関係を整理した。
+
+* @app.post()：データの登録
+* @app.get()：データの取得
+* @app.put()：データの更新
+* @app.delete()：データの削除
+
+さらに、"/students/{student_id}"のようなパスパラメータや、student_id: intによる型指定についてもノートにまとめた。
+
+FastAPIの関数がPythonのデータベース操作関数を呼び出し、結果をAPIのレスポンスとして返す仕組みを整理した。
+
+4. response_modelの使い分け
+
+以前学習した以下の記述について、理解を深めた。
+
+response_model=StudentResponse
+response_model=list[StudentResponse]
+
+StudentResponseは学生1件の出力形式、list[StudentResponse]は学生情報の一覧の出力形式を指定する。
+
+response_modelはGET・POSTだけでなく、PUT・DELETEにも指定できるが、実際に返すデータの形式に一致させる必要があることを確認した。
+
+5. Pydanticの復習課題を追加
+
+以前学習したPydanticの知識が曖昧になっていることを認識し、翌日の学習課題に追加した。
+
+復習対象は以下の内容とする。
+
+* BaseModel
+* StudentCreate
+* StudentResponse
+* Field()
+* response_model
+* model_dump()
+
+Pydanticについては解説と復習問題を確認する準備をしたが、時間の都合により本日のノート作成対象からは除外した。
+
+③ 本日の進捗
+
+学習項目	進捗
+Git・PowerShell	第1セットで整理完了
+CRUD・SQL	第1セットで整理完了
+Python・SQLite	ノート整理完了
+HTTPException・404処理	ノート整理完了
+FastAPIの構文	ノート整理完了
+response_modelの使い分け	解説を確認
+Pydantic	翌日に持ち越し
+CRUD自力記述演習	未実施
+
+④ 本日の評価
+
+評価：既習知識の体系化が進展。自力再現力は未検証。
+
+本日は新しいプログラムの実装ではなく、これまでに学習した内容の復習と整理を中心に取り組んだ。
+
+特に、SQLからPythonのデータベース操作、FastAPIのAPI処理まで、CRUDを構成する主要な要素を一通りノートにまとめることができた。
+
+一方で、ノートにまとめた構文を資料なしで正確に書けるかは、まだ確認できていない。
+
+今後はノートを繰り返し読み返すだけでなく、答えを隠して実際にコードを記述する検索練習を行う必要がある。
+
+⑤ 次回の学習予定｜10月23日
+
+第1部：Pydanticのノート整理
+
+BaseModel・Field()・StudentCreate・StudentResponseなどの基本構文を整理する。
+
+第2部：Pydanticの復習
+
+用意済みの10問を使って、基本的な役割や構文を思い出せるか確認する。
+
+第3部：CRUDの検索練習
+
+時間があれば、SQL・Python・FastAPIのコードを自力で記述する練習を行う。
+
+特に以下を重点的に確認する。
+
+* SQLのUPDATE・DELETE
+* cursor.execute()とプレースホルダー
+* fetchone()・fetchall()
+* HTTPException(status_code=404)
+* FastAPIのデコレーターと関数定義
+
+⑥ 今後の学習方針
+
+CRUDの基本操作は一通り実装経験があり、ノート整理もPydanticを除いて完了した。
+
+今後は知識のインプットからアウトプットへ徐々に比重を移し、資料を見ずに学生管理APIを構築できることを目指す。
+
+その後は、Gitによるコードの履歴管理、GitHubへの公開、ブランチ操作などの学習へ進む。
+
+次回の最優先課題：Pydanticの理解と、CRUDの自力記述能力の確認。
+
