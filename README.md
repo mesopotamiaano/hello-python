@@ -1568,3 +1568,187 @@ CRUDの基本操作は一通り実装経験があり、ノート整理もPydanti
 
 次回の最優先課題：Pydanticの理解と、CRUDの自力記述能力の確認。
 
+プログラミング学習レジュメ｜2026年10月23日
+
+学習テーマ：Pydanticの基礎理解・モデル定義・FastAPIとの連携
+
+① 本日の学習目標
+
+前日にノート整理を終えたGit・SQL・Python・SQLite・FastAPIに続き、Pydanticの基礎知識を復習する。
+
+特に、BaseModel・Field()・StudentCreate・StudentResponseの役割を理解し、入力モデルと出力モデルを自力で記述できるようになることを目標とした。
+
+また、PydanticとFastAPIの連携を理解し、CRUDの総合演習に必要な基礎を固める。
+
+② 本日の学習内容
+
+1. Pydanticの役割の理解
+
+Pydanticについて、最初はデータ型や条件を固定する仕組みという認識だったが、解説を通して理解を深めた。
+
+Pydanticは、データの形式や条件を定義し、実際のデータがそれらの条件を満たしているか検証するライブラリである。
+
+学生管理APIを例に、次の役割の違いを確認した。
+
+* FastAPI：HTTPリクエストの受付とAPI処理
+* Pydantic：データの型や条件の検証
+* SQLite：データの保存・取得・更新・削除
+
+また、入力値がPydanticの条件に違反した場合、通常は422エラーとなり、データベースへの登録処理に進まないことを理解した。
+
+2. StudentCreateとStudentResponseの違い
+
+学生登録用の入力モデルと、学生情報を返す出力モデルについて学習した。
+
+from pydantic import BaseModel, Field
+class StudentCreate(BaseModel):
+    name: str
+    score: int = Field(ge=0, le=100)
+class StudentResponse(BaseModel):
+    id: int
+    name: str
+    score: int
+
+StudentCreateは登録時に必要な名前と点数を定義する。
+
+StudentResponseは、登録後に生成される学生IDを含めた出力形式を定義する。
+
+入力と出力で必要な項目が異なるため、モデルを分けて利用することを理解した。
+
+3. Fieldによる入力条件の検証
+
+Field(ge=0, le=100)の意味を確認した。
+
+* ge=0：0以上
+* le=100：100以下
+
+検索練習ではge=1と記述してしまい、0点も許可する場合はge=0が必要であることを復習した。
+
+構文自体は自力で再現できており、数値条件の確認が今後の課題となった。
+
+4. FastAPIとPydanticの連携
+
+以下のPOST処理について、それぞれの構文の役割を確認した。
+
+@app.post(
+    "/students",
+    response_model=StudentResponse
+)
+def create_student(student: StudentCreate):
+    return add_student(student.name, student.score)
+
+主な確認内容：
+
+* student: StudentCreate：入力データの形式を指定する
+* response_model=StudentResponse：出力データの形式を指定する
+* student.name：入力モデルから名前を取り出す
+* student.score：入力モデルから点数を取り出す
+* add_student()：取り出した値をDB登録用の関数へ渡す
+
+最初はadd_student()の引数について、studentに値を入れる処理と誤解していた。
+
+解説後は、studentから値を取り出して別の関数へ渡す処理であることを理解し、穴埋め問題に正解できた。
+
+5. Pydanticの自力記述練習
+
+StudentCreateを自力で記述した。
+
+モデル名、BaseModelの継承、データ型、Field()の構文は正確だったが、点数の最小値を1と指定していたため修正した。
+
+続いて、StudentResponseも自力で記述した。
+
+必要な項目とデータ型は正確だったが、クラス内のインデントが不足していたため修正した。
+
+最後に、FastAPIのPOST処理における入力モデルと出力モデルの穴埋め問題に取り組み、2問とも正解した。
+
+6. SQL・CRUDの復習
+
+Pydanticの練習後、SQLのUPDATEを復習する予定だったが、45分に達したため未実施となった。
+
+次回はUPDATEの自力記述から再開する。
+
+③ 本日の学習評価
+
+学習項目	評価
+Pydanticの役割	◎ 概念を理解
+BaseModelの継承	◎ 自力記述成功
+StudentCreate	◎ ほぼ正確に記述
+StudentResponse	○ インデントに課題
+Field()	○ 条件の数値に注意
+入力・出力モデルの使い分け	◎ 正解
+student.name・student.score	◎ 修正後に自力回答
+FastAPIとの連携	◎ 穴埋め2問正解
+SQLのUPDATE	次回に持ち越し
+CRUD総合演習	未実施
+
+④ 改善が確認できた点
+
+1. Pydanticの役割を具体的に理解できた
+
+学習開始時点ではPydanticの目的が曖昧だったが、データ検証の具体例を通して、FastAPIやSQLiteとの役割の違いを理解できた。
+
+2. 入力モデルと出力モデルを区別できた
+
+StudentCreateとStudentResponseについて、両者の用途を正確に回答できた。
+
+また、FastAPIのresponse_modelにどちらを指定するべきかも正しく判断できた。
+
+3. モデル定義を自力で書くことができた
+
+単なる選択問題だけでなく、class StudentCreate(BaseModel):などのコードを自力で記述できた。
+
+これは前日のノート整理から、実際のアウトプットへ学習を進められた成果である。
+
+⑤ 今後の課題
+
+1. コードの細部の正確性
+
+ge=0とge=1の違いや、Pythonのインデントなど、細部のミスを減らす必要がある。
+
+2. FastAPIとDB関数の連携
+
+入力モデルの属性を取り出し、Python関数に渡す処理について理解は進んだが、今後は実際に一連の処理を自力で記述する練習が必要である。
+
+3. CRUD全体の自力再現
+
+Pydanticの短い問題では正解できたものの、SQL・SQLite・FastAPIを組み合わせた完全なCRUD処理については、まだ自力記述能力を確認できていない。
+
+⑥ 本日の総合評価
+
+学習到達段階：Pydanticの基礎概念を理解し、モデル定義とFastAPI連携の短いコードを再現できる段階。
+
+今回の学習では、Pydanticの意味を覚えるだけでなく、具体的な入力データと出力データを使い、なぜモデルを分ける必要があるのかを理解できた。
+
+また、コード記述問題にも概ね正確に回答できており、理解とアウトプットの両面で進歩が確認できた。
+
+ただし、独立した短い問題での成果であるため、実際のAPI全体を自力で実装できるかは今後の総合演習で評価する必要がある。
+
+⑦ 次回の学習予定｜10月24日
+
+第1部：Pydanticの短時間復習（5分）
+
+StudentCreate・StudentResponse・Field()・response_modelの役割と構文を確認する。
+
+第2部：SQL・CRUDの検索練習（20分）
+
+前回途中で終了したUPDATEのSQL記述から再開する。
+
+特に、UPDATE・SET・WHERE、プレースホルダーとPythonの引数の対応を重点的に練習する。
+
+第3部：Python・FastAPIの検索練習（15分）
+
+cursor.execute()・fetchone()・fetchall()・HTTPException・FastAPIの関数定義について復習する。
+
+第4部：Gitの検索練習（5分）
+
+基本コマンドを資料なしで思い出し、忘却を防ぐ。
+
+⑧ 今後の学習方針
+
+Pydanticの基礎復習が進んだため、次回以降はSQL・Python・FastAPIのCRUD検索練習に重点を移す。
+
+個別の構文を覚えるだけでなく、入力データの検証からデータベース操作、APIレスポンスまでを一連の処理として理解する。
+
+最終的には、学生管理APIを資料に頼らず自力で実装し、Gitで変更履歴を管理してGitHubに公開できる状態を目指す。
+
+次回の最優先課題：SQLのUPDATEの自力記述と、CRUD全体の知識定着。
