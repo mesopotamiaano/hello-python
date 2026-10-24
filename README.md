@@ -1752,3 +1752,249 @@ Pydanticの基礎復習が進んだため、次回以降はSQL・Python・FastAP
 最終的には、学生管理APIを資料に頼らず自力で実装し、Gitで変更履歴を管理してGitHubに公開できる状態を目指す。
 
 次回の最優先課題：SQLのUPDATEの自力記述と、CRUD全体の知識定着。
+
+プログラミング学習レジュメ｜2026年10月24日
+
+学習テーマ：Pydantic・SQL・CRUD・FastAPI・Gitの検索練習
+
+① 本日の学習目標
+
+前日に復習したPydanticの知識を定着させるとともに、SQL・Python・FastAPIを組み合わせたCRUDの自力記述能力を強化する。
+
+特に、SQLのUPDATE・DELETE、プレースホルダー、404エラー処理、FastAPIのDELETEルーティングを重点的に練習する。
+
+最後にGitの基本コマンドを復習し、継続的な記憶の定着を図る。
+
+② 本日の学習内容
+
+1. Pydanticの検索練習
+
+StudentCreateとStudentResponseの役割について回答した。
+
+* StudentCreate：入力データの形式を定義する
+* StudentResponse：出力データの形式を定義する
+
+役割の違いは正しく回答できた。
+
+続いて、StudentCreateを自力で記述した。
+
+from pydantic import BaseModel, Field
+class StudentCreate(BaseModel):
+    name: str
+    score: int = Field(ge=0, le=100)
+
+最初の回答ではclassを忘れ、Field()の書き方にも誤りがあった。
+
+再挑戦ではclassやge・leを正しく書けたが、Field()の配置とインデントに課題が残った。
+
+学習成果：入力・出力の役割は理解しているが、モデル定義の構文には反復練習が必要。
+
+2. SQL UPDATEの復習
+
+学生の点数を更新するSQLについて、自力記述を行った。
+
+UPDATE scores
+SET score = ?
+WHERE student_id = ?;
+
+scoresテーブルとstudent_idの指定は正しく回答できたが、SET score = ?の比較・代入部分を書き忘れた。
+
+その後、PythonからSQLに値を渡す問題に取り組んだ。
+
+cursor.execute(
+    """
+    UPDATE scores
+    SET score = ?
+    WHERE student_id = ?
+    """,
+    (90, 5)
+)
+
+学生IDが5の学生を90点に更新する場合、(90, 5)と渡すことを正しく回答できた。
+
+プレースホルダーの順番については、以前より理解が定着していることを確認した。
+
+3. conn.commit()の復習
+
+SQLのUPDATE実行後に、変更を確定するコードを問われた。
+
+conn.commit()
+
+ノーヒントで正解した。
+
+SQLiteの変更を確定するための基本操作を正確に思い出せている。
+
+4. SQL DELETEの復習
+
+学生IDを指定して点数データを削除するSQLを記述した。
+
+DELETE FROM scores
+WHERE student_id = ?;
+
+テーブル名とWHERE条件の両方を正しく回答できた。
+
+また、cursor.execute()に渡す引数として、1要素のタプル(5,)も自力で回答した。
+
+5. HTTPException・404エラー処理
+
+データベースに対象の学生が存在しない場合の処理を復習した。
+
+row = cursor.fetchone()
+if row is None:
+    raise HTTPException(
+        status_code=404,
+        detail="Student not found"
+    )
+
+検索練習では以下の3項目をすべて正しく回答した。
+
+* fetchone()：検索結果を1行取得
+* None：対象データが存在しないことを判定
+* 404：対象が見つからない場合のHTTPステータスコード
+
+404エラー処理に必要な基本知識は、正確に思い出せている。
+
+6. DELETE関数の総合記述
+
+学生IDを指定し、scoresとstudentsの両テーブルからデータを削除する処理を自力記述した。
+
+以下のSQLが正しい構文である。
+
+cursor.execute(
+    "DELETE FROM scores WHERE student_id = ?",
+    (student_id,)
+)
+cursor.execute(
+    "DELETE FROM students WHERE id = ?",
+    (student_id,)
+)
+conn.commit()
+conn.close()
+return {"delete_id": student_id}
+
+最初の回答では以下の誤りがあった。
+
+* scoresテーブルの条件をscoreとしてしまった
+* studentsテーブルの条件をnameとしてしまった
+* cursor.execute()のスペルと引数の位置を間違えた
+* 定義していないname・scoreをreturnで返そうとした
+
+特に、scores.student_idとstudents.idの違いを再確認した。
+
+一方、conn.commit()とconn.close()は正しく自力記述できていた。
+
+7. FastAPIのDELETE処理
+
+PythonのDB関数をFastAPIから呼び出す練習を行った。
+
+@app.delete("/students/{student_id}")
+def remove_student(student_id: int):
+    return delete_student(student_id)
+
+deleteとdelete_studentの2か所を正しく回答できた。
+
+HTTPメソッドとDB操作関数をつなげる基本構造は理解できている。
+
+8. Gitコマンドの検索練習
+
+最後にGitの基本コマンドについて3問の検索練習を行った。
+
+結果：3問中2問正解、1問部分正解。
+
+* git status：正解
+* git add hello.py：正解
+* git log --oneline：gitを書き忘れた
+
+過去の履歴を確認する役割は理解しているため、今後はコマンド全体を正確に書けるようにする。
+
+③ 本日の学習評価
+
+学習項目	評価
+Pydanticの役割	◎
+Pydanticモデルの自力記述	△
+SQL UPDATE	○
+プレースホルダーの順序	◎
+conn.commit()	◎
+SQL DELETEの単体問題	◎
+fetchone()・404処理	◎
+DELETE関数の総合記述	△
+FastAPIのDELETE	◎
+Git基本コマンド	○
+
+④ 改善が確認できた点
+
+1. SQLのプレースホルダーの理解が進んだ
+
+UPDATEの値の順番を、ノーヒントで正しく回答できた。
+
+2. CRUDの個別構文が定着してきた
+
+DELETE FROM・fetchone()・conn.commit()・conn.close()などの構文を正確に思い出せた。
+
+3. FastAPIとDB関数の関係を理解できている
+
+DELETEルーティングからdelete_student()を呼び出すコードを正しく回答できた。
+
+4. Gitの基本コマンドを継続して復習できた
+
+git statusとgit add hello.pyを正しく回答できた。
+
+⑤ 今後の課題
+
+1. SQLのWHERE条件を正確に区別する
+
+studentsテーブルではid、scoresテーブルではstudent_idを使用する。
+
+対象テーブルの列構造を確認し、誤って点数や名前を条件に指定しないようにする。
+
+2. Pythonの関数呼び出しを正確に書く
+
+cursor.execute()のスペル、括弧、タプルを渡す位置を重点的に復習する。
+
+3. Pydanticの構文を安定させる
+
+class、インデント、Field()の配置について反復する。
+
+4. CRUD全体の自力記述能力を強化する
+
+個別の穴埋め問題では正解できているが、複数の処理を一続きで書く場合には誤りが増える。
+
+今後は、SQL単体からDB関数、FastAPIまで段階的に組み合わせる練習を増やす。
+
+⑥ 本日の総合評価
+
+学習到達段階：個別構文の理解・想起は改善しているが、CRUDの総合的な自力実装は定着途中。
+
+Pydantic・SQL・Python・FastAPI・Gitを横断して復習し、現在の理解度を確認できた。
+
+特に、プレースホルダーの順番、トランザクションの確定、404エラー処理、FastAPIのDELETEルーティングでは正確な回答ができた。
+
+一方、DELETE関数全体を自力で記述した際には、WHERE句やPython構文、返却値に複数の誤りが見られた。
+
+このことから、今後は個別知識を覚えるだけではなく、実際の処理の流れに沿ってコードを組み立てる練習が必要である。
+
+⑦ 次回の学習予定｜10月25日
+
+第1部：前日の弱点復習（10分）
+
+Pydanticのモデル定義、SQLのUPDATE、students.idとscores.student_idの使い分けを確認する。
+
+第2部：DELETE関数の再実装（20分）
+
+学生の存在確認、404エラー、2つのDELETE文、commit()、close()、returnを一続きで記述する。
+
+最初は一部ヒントを使用し、徐々にヒントを減らす。
+
+第3部：FastAPI・Gitの検索練習（15分）
+
+FastAPIのGET・POST・PUT・DELETEの関数定義を復習し、Gitの基本コマンドも確認する。
+
+⑧ 今後の学習方針
+
+今後は短い穴埋め問題から、実際の処理を組み立てる総合演習へ段階的に移行する。
+
+特に、学生管理APIのCRUDをSQL・Python・Pydantic・FastAPIまで一貫して自力実装できることを中期目標とする。
+
+その後、Gitによる変更履歴の管理とGitHubへの公開を進め、バックエンド開発の成果物として完成させる。
+
+次回の最優先課題：DELETE関数の自力再現と、SQLのWHERE条件の正確な理解。
