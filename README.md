@@ -1998,3 +1998,462 @@ FastAPIのGET・POST・PUT・DELETEの関数定義を復習し、Gitの基本コ
 その後、Gitによる変更履歴の管理とGitHubへの公開を進め、バックエンド開発の成果物として完成させる。
 
 次回の最優先課題：DELETE関数の自力再現と、SQLのWHERE条件の正確な理解。
+
+プログラミング学習レジュメ｜2026年10月25日
+
+学習テーマ：CRUD弱点復習・GitHub連携・push / clone / pullの実践
+
+① 本日の学習目標
+
+これまで学習してきたCRUDの弱点を復習しながら、Gitのローカル操作からGitHubとの連携へ進む。
+
+特に、
+
+* DELETE処理のWHERE条件
+* 404エラー処理
+* PythonのDB関数
+* .gitignore
+* GitHubリモート設定
+* git push
+* git clone
+* git pull
+
+を実際に操作しながら理解することを目標とした。
+
+⸻
+
+② CRUD・DELETE処理の復習
+
+studentsとscoresの列名の使い分け
+
+DELETE処理では、テーブルによって学生IDを表す列名が異なることを再確認した。
+
+scores
+
+DELETE FROM scores
+WHERE student_id = ?;
+
+students
+
+DELETE FROM students
+WHERE id = ?;
+
+最初はstudentsテーブルにもstudent_idを使用してしまったため修正した。
+
+重要な区別は以下。
+
+* students.id：学生自身のID
+* scores.student_id：どの学生の点数かを示すID
+
+Pythonから値を渡す
+
+cursor.execute(
+    "DELETE FROM scores WHERE student_id = ?",
+    (student_id,)
+)
+
+student_idという変数自体は正しく思い出せたが、1要素タプルに必要なカンマを忘れた。
+
+(student_id,)
+
+という形を再確認した。
+
+commit・close・return
+
+以下はノーヒントで正しく記述できた。
+
+conn.commit()
+conn.close()
+return {"delete_id": student_id}
+
+前回より、DELETE処理後の保存・接続終了・返却値の理解は安定してきた。
+
+⸻
+
+③ 404エラー処理
+
+学生が存在しない場合の処理を復習した。
+
+row = cursor.fetchone()
+if row is None:
+    conn.close()
+    raise HTTPException(
+        status_code=404,
+        detail="Student not found"
+    )
+
+検索練習では、
+
+* None
+* HTTPException
+* 404
+
+をすべてノーヒントで正解できた。
+
+404エラー処理については比較的安定している。
+
+⸻
+
+④ DELETE関数の自力記述
+
+Jupyter Notebookで、学生の存在確認から404エラーまでを自力で記述した。
+
+最初は以下のミスがあった。
+
+* cursorのスペルミス
+* SQLのWHEREを書き忘れた
+* cursor.execute()の閉じ括弧が不足
+
+修正後は以下の処理を正しく記述・実行できた。
+
+def delete_student(student_id: int):
+    conn = sqlite3.connect("students.db")
+    cursor = conn.cursor()
+    cursor.execute(
+        "SELECT id FROM students WHERE id = ?",
+        (student_id,)
+    )
+    row = cursor.fetchone()
+    if row is None:
+        conn.close()
+        raise HTTPException(
+            status_code=404,
+            detail="Student not found"
+        )
+
+Jupyter上で関数定義もエラーなく実行できた。
+
+ただし、学生が存在する場合の実際のDELETE処理までは今回完成させていないため、次回以降に再確認する。
+
+⸻
+
+Git・GitHub学習
+
+⑤ .gitignore を新しく学習
+
+Jupyterが自動生成する、
+
+.ipynb_checkpoints/
+
+をGitの管理対象から除外するために、.gitignoreを作成した。
+
+.gitignoreには以下を記述した。
+
+.ipynb_checkpoints/
+
+git statusで確認し、.ipynb_checkpoints/が表示されなくなったことを確認した。
+
+.gitignoreの意味
+
+Gitで追跡・管理しないファイルやフォルダを指定する除外リスト。
+
+新しいファイルを指定するものではなく、Gitに「これは無視してよい」と伝える設定ファイルである。
+
+⸻
+
+⑥ .gitignore をcommit
+
+以下を実践した。
+
+git add .gitignore
+
+途中、
+
+git add.ignore
+
+や、
+
+git add .ignore
+
+と入力してしまったが、最終的に正しいファイル名とスペースの位置を確認した。
+
+その後、
+
+git commit -m "Add .gitignore"
+
+を実行し、3回目のcommitに成功した。
+
+⸻
+
+⑦ GitHubとのリモート接続
+
+新しくGitHub上にPrivateリポジトリ、
+
+git-practice
+
+を作成した。
+
+新しく学習したコマンド
+
+接続先の確認
+
+git remote -v
+
+GitHubの接続先を登録
+
+git remote add origin URL
+
+登録済みURLを変更
+
+git remote set-url origin URL
+
+最初はhttp://で登録したため、https://へ修正した。
+
+⸻
+
+⑧ 初めてのgit push
+
+PC側のGit履歴をGitHubへ送信した。
+
+git push -u origin master
+
+最初はmasterのスペルを間違えたが、修正後にpush成功。
+
+PowerShell上で、
+
+master -> master
+
+と表示され、GitHub側に、
+
+* hello.py
+* .gitignore
+* commit履歴
+
+が反映されたことを確認した。
+
+pushの意味
+
+PC → GitHubへ、commitした変更履歴を送る操作。
+
+初回に-uで追跡先を設定したため、その後は通常、
+
+git push
+
+だけでも送信できる。
+
+⸻
+
+⑨ 2回目のpush
+
+hello.pyに、
+
+print("GitHub push practice")
+
+を追加した。
+
+その後、
+
+git diff hello.py
+git add hello.py
+git commit -m hello.py
+git push -u origin master
+
+を実行した。
+
+commit自体は成功したが、-mの後ろはファイル名ではなくcommitの説明文を書くことを再確認した。
+
+より適切な例：
+
+git commit -m "Practice GitHub push"
+
+2回目のpushも正常に成功した。
+
+⸻
+
+GitHub → PC方向の学習
+
+⑩ git clone
+
+GitHub上のgit-practiceを、別フォルダとしてPCへ取得した。
+
+git clone https://github.com/mesopotamiaano/git-practice.git git-practice-clone
+
+新しく、
+
+git-practice-clone
+
+というフォルダが作成された。
+
+dirで確認すると、
+
+* hello.py
+* .gitignore
+
+が取得されていた。
+
+さらに、
+
+git log --oneline
+
+を実行すると、過去のcommit履歴も取得されていることを確認した。
+
+cloneの意味
+
+まだPCにないGitHubリポジトリを、ファイルとGit履歴ごと最初に丸ごと取得する。
+
+⸻
+
+⑪ git pull
+
+GitHub上でhello.pyを直接編集し、
+
+print("Git pull practice")
+
+を追加してcommitした。
+
+その後、PC側のgit-practice-cloneで、
+
+git pull
+
+を実行した。
+
+PowerShell上で、
+
+Fast-forward
+
+と表示され、GitHub側の最新変更がPC側へ取り込まれた。
+
+メモ帳でも、
+
+print("Git pull practice")
+
+が追加されていることを確認した。
+
+pullの意味
+
+すでにPCに存在するリポジトリを、GitHub側の最新状態に更新する。
+
+⸻
+
+⑫ cloneとpullの使い分け
+
+検索練習では両方正解できた。
+
+* 新しいPCなどで初めてGitHubから取得する → git clone
+* すでにPCにあるものを最新にする → git pull
+
+今日の重要な方向関係
+
+push
+PC → GitHub
+clone
+GitHub → PC
+最初に丸ごと取得
+pull
+GitHub → PC
+既存のリポジトリを最新化
+
+⸻
+
+⑬ 本日の学習評価
+
+学習項目	評価
+students.id / scores.student_id	△ 要反復
+1要素タプル (student_id,)	△
+commit / close / return	◎
+404エラー処理	◎
+DELETE関数の存在確認部分	○
+.gitignore	◎
+git remote -v	○
+git remote add origin	○
+git remote set-url	○
+初回push	◎
+2回目push	◎
+git clone	◎
+git pull	◎
+clone / pullの使い分け	◎
+
+⸻
+
+⑭ 改善が確認できた点
+
+1. Gitの操作範囲が大きく広がった
+
+これまでの、
+
+status → diff → add → commit → log
+
+というローカル操作から、
+
+remote → push → clone → pull
+
+というGitHubとの連携まで進んだ。
+
+2. GitHubとの双方向操作を経験した
+
+PCからGitHubへ送るpushだけでなく、GitHubからPCへ取得するcloneとpullも実際に操作できた。
+
+3. CRUDの404処理が安定してきた
+
+fetchone()・None・HTTPException・404はノーヒントで正しく回答できた。
+
+⸻
+
+⑮ 今後の課題
+
+CRUD
+
+* students.idとscores.student_idの区別
+* (student_id,)のカンマ
+* cursor.execute()の括弧・スペル
+* DELETE関数全体の自力再現
+
+Git
+
+* コマンドのスペルを正確にする
+* git commit -mのメッセージの意味を定着させる
+* push / clone / pullをノートなしで自力再現する
+
+⸻
+
+⑯ 次回の学習予定
+
+まず、10月25日に新しく学習したGitコマンドについてノート整理を行う。
+
+重点項目：
+
+* .gitignore
+* git remote -v
+* git remote add origin
+* git remote set-url
+* git push
+* git clone
+* git pull
+
+その後、検索練習で役割と操作順序を確認する。
+
+Gitの基本が安定してきたら、
+
+* git branch
+* git switch
+* git merge
+
+などのブランチ操作へ進む。
+
+CRUDについては、DELETE関数の続きを含め、SQL → Python → FastAPIをつなげる総合演習を継続する。
+
+⸻
+
+⑰ 本日の総合評価
+
+学習到達段階：Gitのローカル管理からGitHubとの双方向連携まで進んだ段階。
+
+10月25日は、Git学習において大きな進展があった。
+
+PC上で変更履歴を管理するだけでなく、GitHubへのpush、GitHubからのclone・pullまで一通り実践できた。
+
+特に、
+
+push＝PC→GitHub
+
+clone＝GitHub→PCへ初回取得
+
+pull＝GitHub→既存PCを最新化
+
+という基本的な方向関係を理解できた。
+
+一方で、CRUDではDELETE関数全体を正確に自力記述する力がまだ定着途中である。
+
+今後は、Gitの新規学習を進めながら、CRUDの検索練習と総合実装も並行して継続する。
+
+次回の最優先課題：今日新しく学んだGit操作のノート整理と検索練習、DELETE関数の自力再現。
