@@ -2457,3 +2457,248 @@ pull＝GitHub→既存PCを最新化
 今後は、Gitの新規学習を進めながら、CRUDの検索練習と総合実装も並行して継続する。
 
 次回の最優先課題：今日新しく学んだGit操作のノート整理と検索練習、DELETE関数の自力再現。
+
+プログラミング学習レジュメ｜2026年10月26日
+
+学習テーマ：Git検索練習・CRUD DELETE復習・Gitブランチ管理
+
+① 本日の学習目標
+
+前日に学習したGit・GitHubの操作を復習し、CRUDのDELETE処理における構文の弱点を改善する。
+
+さらに、Gitの新しい機能であるブランチ管理を学習し、コードの派生・切り替え・統合まで実践する。
+
+② Git・GitHubの検索練習
+
+最初に、前日学習したGitコマンドをノーヒントで回答した。
+
+第1回：3問中3問正解
+
+* git push：PCからGitHubへ変更を送信
+* git clone：GitHubから初めてリポジトリを取得
+* git pull：GitHubの最新変更を既存のPC側へ取り込む
+
+3つのコマンドを正確に回答できた。
+
+第2回：2問中1問正解
+
+GitHubの接続先を確認する問題では、git remote -v と答えるべきところを git status と回答した。
+
+また、.gitignore の役割については「除外する」と正しく回答できた。
+
+課題：Gitコマンドの役割を混同せず、状況に合わせて選べるようにする。
+
+③ CRUD・DELETE処理の復習
+
+学生IDを指定して、scoresとstudentsの両テーブルからデータを削除するコードを自力記述した。
+
+正しいSQLとPython
+
+cursor.execute(
+    "DELETE FROM scores WHERE student_id = ?",
+    (student_id,)
+)
+cursor.execute(
+    "DELETE FROM students WHERE id = ?",
+    (student_id,)
+)
+conn.commit()
+conn.close()
+return {"delete_id": student_id}
+
+今回の回答では次の点に誤りがあった。
+
+* studentsのWHERE条件にstudent_idを使用した
+* cursor.execute()の閉じ括弧を早く書いてしまった
+* DELETE後に不要なfetchone()を使用した
+* returnの辞書キーに引用符が不足していた
+
+一方、DELETE FROMの基本構文やconn.commit()、conn.close()は正確に回答できた。
+
+最も重要な復習事項
+
+cursor.execute(SQL文, 値のタプル)
+
+SQL文とタプルは、同じexecute()の括弧内に記述する。
+
+再練習では、SQL文とタプルの間に必要なカンマを正しく回答できた。
+
+現状：DELETEの個別構文はある程度理解しているが、関数全体の自力記述は未定着。
+
+④ 新規学習：Gitブランチ
+
+ブランチは、既存のコードから派生して別の開発を進めるための仕組みである。
+
+新しく学習したコマンド
+
+コマンド	役割
+git branch	ブランチ一覧と現在のブランチを確認
+git switch -c feature-search	新しいブランチを作成して切り替える
+git switch master	masterへ切り替える
+git merge feature-search	feature-searchの変更を現在のブランチへ統合
+
+ブランチの作成
+
+PowerShellで以下を実行した。
+
+git switch -c feature-search
+
+最初は-cの後にブランチ名を書き忘れたが、修正して作成に成功した。
+
+続いて、
+
+git branch
+
+を実行し、
+
+* feature-search
+  master
+
+という表示を確認した。
+
+*は現在作業しているブランチを示す。
+
+⑤ feature-searchでコードを変更
+
+新しく作成したfeature-searchブランチで、hello.pyに次のコードを追加した。
+
+print("Feature search practice")
+
+その後、
+
+git add hello.py
+git commit -m "Add feature search practice"
+
+を実行した。
+
+途中でgit addのファイル名指定を忘れ、commitのコマンドも思い出せなかったが、修正後は正常にcommitできた。
+
+commit ID：****df47840
+
+この時点では、追加した5行目はfeature-searchブランチにだけ記録されていた。
+
+⑥ masterへの切り替え
+
+次に、
+
+git switch master
+
+を実行した。
+
+hello.pyを開くと、先ほど追加した5行目がなくなり、元の4行に戻っていた。
+
+これにより、ブランチを切り替えると、そのブランチに記録されたコードの状態へ切り替わることを確認できた。
+
+⑦ git mergeによる統合
+
+masterに戻った状態で、
+
+git merge feature-search
+
+を実行した。
+
+PowerShellには以下が表示された。
+
+Fast-forward
+hello.py | 1 +
+1 file changed, 1 insertion(+)
+
+その後、hello.pyを開き、masterにも5行目が追加されていることを確認した。
+
+今回のmergeはFast-forwardだったため、新しいmerge commitを作らずにmasterを進めることができた。
+
+ブランチ操作の流れ
+
+master
+  ↓
+git switch -c feature-search
+  ↓
+feature-searchでコードを変更
+  ↓
+git add → git commit
+  ↓
+git switch master
+  ↓
+git merge feature-search
+  ↓
+masterに変更が統合される
+
+⑧ GitHubへの反映
+
+最後に、統合した変更をGitHubへ送信した。
+
+検索練習ではgit remote -vと誤答したが、正しいコマンドを確認した。
+
+git push
+
+実行後、以下が表示された。
+
+fcec481..df47840  master -> master
+
+これにより、GitHubのmasterにも変更が送信された。
+
+ブランチの作成からGitHubへの反映まで、一連の操作に成功した。
+
+⑨ 本日の学習評価
+
+学習項目	評価
+push / clone / pullの役割	◎
+git remote -vの想起	△
+.gitignoreの役割	○
+SQL DELETE	○
+cursor.execute()の自力記述	△
+git branch	◎
+git switch -c	◎
+git switch master	◎
+git merge	◎
+GitHubへのpush	◎
+
+※ Gitの新しいコマンドは実行に成功したが、手順を見ずに再現できるかは次回確認する。
+
+⑩ 本日の成果と課題
+
+成果
+
+1. Gitのブランチという新しい概念を理解した。
+2. ブランチの作成・切り替え・統合を実践できた。
+3. 異なるブランチではコードの状態が変わることを確認できた。
+4. mergeした変更をGitHubへ送信できた。
+5. push・clone・pullの用途をノーヒントで正確に回答できた。
+
+今後の課題
+
+1. Gitコマンドを状況に応じて正確に思い出す。
+2. git remote -vとgit statusを区別する。
+3. git addのファイル名を忘れない。
+4. cursor.execute()の括弧とカンマの位置を定着させる。
+5. DELETE関数を存在確認・404処理・削除・返却まで自力で完成させる。
+
+⑪ 次回の学習予定
+
+第1部：Git検索練習（10分）
+
+新しく学んだbranch・switch・mergeを中心に復習し、以前のGitコマンドも交えて出題する。
+
+第2部：CRUD総合演習（25分）
+
+DELETE関数をSQL・Python・404エラー処理まで一続きで自力記述する。
+
+特にcursor.execute()とWHERE句を重点的に練習する。
+
+第3部：Gitと学習内容の整理（10分）
+
+Gitコマンドの使い分けを確認し、学習ノートに新しい操作と流れを記録する。
+
+⑫ 本日の総合評価
+
+学習到達段階：Gitのブランチ操作と統合を実践できた段階。
+
+10月26日は、Git・GitHub学習で新しい段階に進んだ。
+
+これまでのファイル管理やpush・pullに加え、ブランチによる独立した開発とmergeによる統合まで経験できた。
+
+一方で、Gitコマンドの自力想起とCRUDの複数行コードには課題が残っている。
+
+今後は新しい操作を増やすだけでなく、既習内容の検索練習と自力実装を継続し、実務で使用できる知識として定着させる。
+
+次回の最優先課題：branch・switch・mergeの自力再現と、DELETE関数の完成。
