@@ -2702,3 +2702,330 @@ Gitコマンドの使い分けを確認し、学習ノートに新しい操作�
 今後は新しい操作を増やすだけでなく、既習内容の検索練習と自力実装を継続し、実務で使用できる知識として定着させる。
 
 次回の最優先課題：branch・switch・mergeの自力再現と、DELETE関数の完成。
+
+プログラミング学習レジュメ｜2026年10月27日
+
+学習テーマ：Git検索練習・CRUD DELETE総合演習・Pydantic/FastAPI復習
+
+① 本日の学習目標
+
+前日に学習したGitコマンドの記憶定着を確認し、これまで苦戦していたCRUDのDELETE関数を自力で完成させる。
+
+さらに、Pydanticの入力・出力モデルとFastAPIの関係を復習し、API開発の基礎知識を定着させる。
+
+本日は新しいGit操作には進まず、既習内容の復習と自力記述を優先した。
+
+② Git・GitHub検索練習
+
+前日に学習したブランチ操作を中心に、3問の検索練習を実施した。
+
+問題	自分の回答	評価
+ブランチ一覧の確認	git branch	◎ 正解
+feature-searchをmasterへ統合	git merge	△ 部分正解
+GitHubの接続先確認	git remote-v URL	△ 部分正解
+
+結果：1問正解・2問部分正解。
+
+正しいコマンドは以下のとおり。
+
+git branch
+git merge feature-search
+git remote -v
+
+今回の課題は、コマンドの用途はある程度思い出せていても、引数やスペースを含めた正確な記述が不安定なこと。
+
+特にgit mergeの後には統合対象のブランチ名が必要であり、git remote -vにはURLを指定する必要がない。
+
+今後の課題：Gitコマンドをノーヒントで最後まで正確に書く。
+
+⸻
+
+③ CRUD・DELETE関数の検索練習
+
+前日まで苦戦していたDELETE関数を、処理ごとに分割して自力記述した。
+
+問題①：学生の存在確認
+
+学生IDを指定し、studentsテーブルから学生を検索するコードを記述した。
+
+cursor.execute(
+    "SELECT id FROM students WHERE id = ?",
+    (student_id,)
+)
+row = cursor.fetchone()
+
+評価：ほぼ正解。
+
+SELECT、WHERE、プレースホルダー、タプル、fetchone()を正しく使用できた。
+
+なお、実際のPython文字列の途中に改行を入れないよう注意が必要。
+
+問題②：404エラー処理
+
+学生が存在しなかった場合の処理を記述した。
+
+if row is None:
+    conn.close()
+    raise HTTPException(
+        status_code=404,
+        detail="Student not found"
+    )
+
+最初の回答ではstatus_code404と記述し、=を忘れていた。
+
+それ以外の条件分岐、接続終了、例外処理は正しく記述できた。
+
+評価：ほぼ正解。
+
+問題③：DELETE処理
+
+2つのテーブルから学生データを削除するSQLを自力で記述した。
+
+cursor.execute(
+    "DELETE FROM scores WHERE student_id = ?",
+    (student_id,)
+)
+cursor.execute(
+    "DELETE FROM students WHERE id = ?",
+    (student_id,)
+)
+
+評価：完全正解。
+
+前日まで間違えていた次の項目をすべて正しく書けた。
+
+* scores.student_idとstudents.idの使い分け
+* SQL文とタプルの間のカンマ
+* (student_id,)の書き方
+* cursor.execute()の括弧の位置
+* scoresから先に削除する順序
+
+特に、括弧とカンマの誤りがなくなったことは重要な改善点。
+
+問題④：commit・close・return
+
+conn.commit()
+conn.close()
+return {"delete_id": student_id}
+
+評価：完全正解。
+
+変更の確定、接続終了、削除IDの返却を正しい順番で記述できた。
+
+⸻
+
+④ DELETE関数の総合実装
+
+分割して練習した処理を、Jupyter Notebook上で一つの関数として記述した。
+
+完成したコード
+
+def delete_student(student_id: int):
+    conn = sqlite3.connect("students.db")
+    cursor = conn.cursor()
+    cursor.execute(
+        "SELECT id FROM students WHERE id = ?",
+        (student_id,)
+    )
+    row = cursor.fetchone()
+    if row is None:
+        conn.close()
+        raise HTTPException(
+            status_code=404,
+            detail="Student not found"
+        )
+    cursor.execute(
+        "DELETE FROM scores WHERE student_id = ?",
+        (student_id,)
+    )
+    cursor.execute(
+        "DELETE FROM students WHERE id = ?",
+        (student_id,)
+    )
+    conn.commit()
+    conn.close()
+    return {"delete_id": student_id}
+
+※ sqlite3とHTTPExceptionは事前にインポートされている想定。
+
+総合演習で発生したミス
+
+初回のコードでは次の2点を修正した。
+
+1. DBファイル名をstudent.dbと記述していたため、students.dbへ修正
+2. 返却する辞書のキーをselete_idと記述していたため、delete_idへ修正
+
+修正後、Jupyterでセルを実行し、エラーが発生しないことを確認した。
+
+実行状況
+
+* 関数の自力記述：完了
+* 指摘されたコードの修正：完了
+* Jupyterでの関数定義：成功
+* 実際の学生データ削除テスト：未実施
+* 削除後のデータベース確認：未実施
+
+現状：DELETE関数のコードは一通り完成。実際の削除動作は次回以降に検証する。
+
+関数を定義しただけではデータベースの削除処理は実行されないため、実動作まで成功したとはまだ判断しない。
+
+⸻
+
+⑤ Pydanticの復習
+
+問題①：入力モデルと出力モデル
+
+class StudentCreate(BaseModel):
+    name: str
+    score: int
+class StudentResponse(BaseModel):
+    id: int
+    name: str
+    score: int
+
+回答：
+
+* StudentCreate：入力
+* StudentResponse：出力
+
+結果：2問とも正解。
+
+StudentCreateはAPIが受け取るデータを定義・検証し、StudentResponseはAPIが返すデータの形式を定義・検証する。
+
+問題②：Fieldの条件
+
+score: int = Field(ge=1, le=100)
+
+問題	回答	評価
+ge=1	1以上	◎
+le=100	100以下	◎
+score=120	エラー	◎
+
+結果：3問とも正解。
+
+Fieldによる数値制限の意味は定着している。
+
+FastAPIで不正なリクエストデータが送信された場合、通常はHTTP 422エラーとなる。
+
+⸻
+
+⑥ FastAPIの復習
+
+以下のコードについて、入力モデルと出力モデルの役割を説明した。
+
+@app.post(
+    "/students",
+    response_model=StudentResponse
+)
+def create_student(student: StudentCreate):
+    ...
+
+① student: StudentCreate
+
+回答：「studentの名前と点数」
+
+評価：ほぼ正解。
+
+より正確には、APIが受け取るstudentのデータ形式をStudentCreateで指定する。
+
+これにより、入力データの型や条件を検証できる。
+
+② response_model=StudentResponse
+
+回答：「FastAPIからのデータを出力、検証、定義」
+
+評価：正解。
+
+APIのレスポンス形式を指定し、出力データの検証や整形に使用される。
+
+現状：Pydanticの入力・出力モデルの役割は理解できている。
+
+⸻
+
+⑦ 本日の学習評価
+
+学習項目	評価
+Gitのコマンド選択・記述	○
+Gitの引数・オプションの正確性	△
+SELECT・fetchone	◎
+HTTPExceptionによる404処理	○
+DELETE文の自力記述	◎
+cursor.executeの括弧・カンマ	◎
+commit・close・return	◎
+DELETE関数の総合記述	◎
+DELETE関数の実動作確認	未実施
+Pydanticの入力・出力	◎
+Fieldの数値制限	◎
+FastAPIのresponse_model	◎
+
+※ ◎は今回の演習での正答・成功を意味する。実務レベルの習熟や長期記憶への定着を保証するものではない。
+
+⑧ 本日の成果
+
+1. 前日まで苦戦していたcursor.execute()の括弧・カンマを正確に記述できた。
+2. SELECTによる存在確認から404処理、DELETE、commit、returnまでつなげられた。
+3. DELETE関数をJupyterで一通り自力記述した。
+4. コードの修正後、関数定義をエラーなく実行できた。
+5. Pydanticの入力・出力モデル、Fieldの数値条件を正確に説明できた。
+6. FastAPIのresponse_modelの役割を理解できていることを確認した。
+
+⑨ 今後の課題
+
+優先度：高
+
+① DELETE関数の実動作確認
+
+テスト用の学生データを使用して削除処理を実行し、データが正しく削除されたか確認する。
+
+存在しない学生IDを指定した際の404処理も検証する。
+
+② Gitコマンドの検索練習
+
+特に次のコマンドを復習する。
+
+git branch
+git switch master
+git merge feature-search
+git remote -v
+git push
+
+用途だけでなく、引数・オプションを含めて自力で記述する。
+
+優先度：中
+
+③ CRUD全体の総合演習
+
+POST・GET・PUT・DELETEを組み合わせ、データの作成から削除までの一連の流れを実装する。
+
+④ FastAPI・Pydanticのコード記述
+
+用語の理解だけでなく、BaseModelによるモデル定義とFastAPIのエンドポイントを自力で書く練習を進める。
+
+⸻
+
+⑩ 次回の学習予定
+
+次のセットを実施する場合、Git・GitHubの新規学習へ進む。
+
+第2セット：GitHubのPull Request（45分）
+
+* Gitブランチの短い検索練習
+* 新しい開発ブランチの作成
+* コード変更・commit
+* 開発ブランチをGitHubへpush
+* GitHub上でPull Requestを作成
+* 変更内容を確認し、mergeする
+
+余力があれば、別セットでCRUDの実動作テストと総合実装にも取り組む。
+
+⑪ 本日の総合評価
+
+学習到達段階：CRUDのDELETE関数を、一通り自力で記述できる段階。
+
+10月27日は、新しい知識を増やすよりも、既習内容を自分の力で再現する練習に重点を置いた。
+
+特にDELETE処理については、前日まで繰り返していたSQLの引数指定や括弧の誤りが改善され、関数全体を組み立てられるようになった。
+
+一方で、Gitコマンドの正確な想起にはまだ課題がある。また、DELETE関数は定義まで成功したものの、実際の削除テストは未実施である。
+
+次の目標は、CRUDの動作検証を完了させることと、GitHubのPull Requestを学習すること。
