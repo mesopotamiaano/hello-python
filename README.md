@@ -3029,3 +3029,396 @@ POST・GET・PUT・DELETEを組み合わせ、データの作成から削除ま�
 一方で、Gitコマンドの正確な想起にはまだ課題がある。また、DELETE関数は定義まで成功したものの、実際の削除テストは未実施である。
 
 次の目標は、CRUDの動作検証を完了させることと、GitHubのPull Requestを学習すること。
+
+プログラミング学習レジュメ｜2026年10月28日
+
+学習テーマ：Git・GitHubの復習、ノート整理、Pull Requestの新規学習
+
+① 本日の学習目標
+
+これまで学習したGit・GitHubのコマンドをノートに整理し、検索練習で記憶への定着を確認する。
+
+さらに、GitHubのPull Request（PR）を新しく学習し、ブランチでの開発からGitHub上での統合まで実践する。
+
+本日はGit・GitHubに集中し、Python・SQL・FastAPIの実装練習は行わなかった。
+
+⸻
+
+② Gitコマンドのノート整理
+
+以前のノートはgit log --onelineまで記録していたため、その続きから整理した。
+
+GitHub連携・リモート操作
+
+コマンド・設定	役割
+.gitignore	Gitで追跡しないファイルを指定する設定
+git remote -v	登録済みの接続先URLを確認
+git remote add origin URL	GitHubの接続先を登録
+git remote set-url origin URL	接続先URLを変更
+git push -u origin master	初回push・追跡先設定
+git push	GitHubに変更を送信
+git clone URL	リポジトリを複製
+git pull	リモートの変更を取得・統合
+
+ブランチ操作
+
+コマンド	役割
+git branch	ブランチ一覧を確認
+git switch -c feature-search	ブランチを作成して切り替え
+git switch master	masterへ切り替え
+git merge feature-search	別ブランチの変更を統合
+
+以前学んだ内容のうち、未記入だった部分をノートにまとめた。
+
+また、git log --onlineではなく、正しくはgit log --onelineであることを確認した。
+
+⸻
+
+③ Git検索練習
+
+ノートを閉じて、コマンドを自力で思い出す練習を実施した。
+
+問題①：ブランチの統合
+
+質問：feature-searchの変更をmasterへ統合するコマンドは？
+
+自分の回答：
+
+git merge
+
+正解：
+
+git merge feature-search
+
+評価：部分正解
+
+git mergeの役割は思い出せたが、統合対象のブランチ名が抜けていた。
+
+問題②：GitHub接続先の確認
+
+質問：登録済みのGitHub接続先を確認するコマンドは？
+
+自分の回答：
+
+git branch
+
+正解：
+
+git remote -v
+
+評価：不正解
+
+git branchはブランチ一覧を確認するコマンドであり、GitHubの接続先を確認するコマンドではない。
+
+検索練習の課題
+
+コマンドの意味を説明されれば理解できるが、自力で選択すると混同することがある。
+
+特に、コマンド名だけでなく、必要な引数やオプションまで正確に記述する練習が必要。
+
+⸻
+
+④ 新規学習：GitHubのPull Request
+
+Pull Requestとは
+
+Pull Request（PR）は、別ブランチで変更したコードを確認・レビューしてもらい、元のブランチへの統合を提案するGitHubの機能。
+
+Gitのmergeとは役割が異なる。
+
+操作	役割
+git add	commitする変更を準備
+git commit	変更を履歴として記録
+git push	GitHubへ送信
+Pull Request	変更内容の確認・レビュー・統合の提案
+Merge	変更を実際に統合
+
+Pull Requestについて、「git addと同じように中間段階の役割なのか」と質問した。
+
+その理解はおおむね正しく、特に次の違いが重要。
+
+* addはcommit前の準備
+* Pull Requestはmerge前の確認・提案
+
+会社の開発では、開発者がPull Requestを作成し、別のエンジニアがコードをレビューしてから統合することがある。
+
+今回は個人リポジトリで、自分自身が変更内容を確認して統合した。
+
+⸻
+
+⑤ 新規ブランチでの開発
+
+作業場所：
+
+C:\Users\81903\git-practice-clone
+
+最初にgit statusを実行し、masterにいることと、未コミットの変更がないことを確認した。
+
+その後、新しいブランチを作成した。
+
+git switch -c feature-practice
+
+実行結果：
+
+Switched to a new branch 'feature-practice'
+
+コードの変更
+
+hello.pyを開き、6行目に以下を追加した。
+
+print("Pull Request practice")
+
+変更後、次のコマンドで差分を確認した。
+
+git diff hello.py
+
+結果として、追加したコードが緑色の+付きで表示された。
+
+git diffは、コードの変更箇所を確認するためのコマンド。
+
+⸻
+
+⑥ git add・git commitの復習
+
+git add
+
+質問：変更したhello.pyをcommitする準備に登録するには？
+
+自分の回答：
+
+git pull
+
+正解：
+
+git add hello.py
+
+評価：不正解
+
+git pullとgit addを混同した。
+
+その後、正しいコマンドを実行し、git statusで以下を確認した。
+
+Changes to be committed:
+    modified: hello.py
+
+これにより、ステージングが成功した。
+
+git commit
+
+質問：メッセージを「Add pull request practice」にしてcommitするには？
+
+自分の回答：
+
+git commit -m hello.py
+
+正解：
+
+git commit -m "Add pull request practice"
+
+評価：部分正解
+
+git commit -mまでは思い出せたが、ファイル名とcommitメッセージを混同した。
+
+正しいコマンドを実行し、commitに成功した。
+
+[feature-practice a7c857b] Add pull request practice
+1 file changed, 1 insertion(+)
+
+commit ID：a7c857b
+
+今回の重要事項：
+
+* git add hello.py：ファイル名を指定
+* git commit -m "..."：変更内容を説明するメッセージを指定
+
+⸻
+
+⑦ GitHubへのブランチ送信
+
+新しいブランチをGitHubに送るため、次のコマンドを実行した。
+
+git push -u origin feature-practice
+
+実行結果：
+
+[new branch] feature-practice -> feature-practice
+
+さらに、GitHub側のブランチとの追跡関係が設定された。
+
+学習したこと
+
+-uは今後のpush先を設定するためのオプション。
+
+一度設定したブランチでは、通常は次回からgit pushだけで変更を送信できる。
+
+この時点では、GitHub上にfeature-practiceが作成されたが、masterには統合されていない。
+
+⸻
+
+⑧ 初めてのPull Requestを作成
+
+GitHubのPR作成画面を開き、次の内容を確認した。
+
+統合先： master
+
+変更元： feature-practice
+
+PRタイトル：
+
+Add pull request practice
+
+説明文：
+
+hello.py に Pull Request の練習用コードを1行追加しました。
+
+「Create pull request」をクリックし、Pull Requestの作成に成功した。
+
+Pull Request番号：#1
+
+変更内容の確認
+
+GitHubの「Files changed」タブを開き、次の変更が表示されることを確認した。
+
++print("Pull Request practice")
+
+変更されたファイルはhello.pyの1つで、追加したコードは1行だった。
+
+これにより、Pull Request上でコードの差分を確認する方法を学んだ。
+
+⸻
+
+⑨ GitHub上でのmerge
+
+Pull Requestには以下の表示があった。
+
+No conflicts with base branch
+Merging can be performed automatically.
+
+これは、統合先との競合がなく、自動的に統合できる状態であることを意味する。
+
+その後、「Merge pull request」を押し、最終確認画面で「Confirm merge」を実行した。
+
+結果：
+
+Pull request successfully merged and closed
+
+GitHub上でMergedと表示され、masterへの統合に成功した。
+
+merge commit ID：5e75a5e
+
+これで初めてのPull Requestの作成・確認・統合を完了した。
+
+⸻
+
+⑩ PC側への変更反映
+
+GitHub上のmasterは更新されたが、PC側のmasterは自動更新されない。
+
+そこで、以下を実行した。
+
+git switch master
+git pull
+
+実行結果：
+
+Updating df47840..5e75a5e
+Fast-forward
+hello.py | 1 +
+1 file changed, 1 insertion(+)
+
+最後に、
+
+notepad hello.py
+
+でファイルを開き、6行目に次のコードがあることを確認した。
+
+print("Pull Request practice")
+
+GitHub上のmasterとPC側のmasterの両方に変更を反映できた。
+
+⸻
+
+⑪ 本日の学習評価
+
+学習項目	評価
+Gitコマンドのノート整理	◎
+git mergeの自力記述	△
+git remote -vの自力想起	△
+git addの自力想起	△
+git commitの自力記述	△
+新規ブランチ作成	◎
+git diffによる差分確認	◎
+git add・commitの実行	◎
+新規ブランチのpush	◎
+Pull Requestの作成	◎
+Files changedの確認	◎
+GitHub上でのmerge	◎
+git pullによるPC側の更新	◎
+
+※ ◎は今回の演習における操作成功を意味する。ノーヒントで再現できるかは次回確認する。
+
+⸻
+
+⑫ 本日の成果と課題
+
+成果
+
+1. Git・GitHubの未記入コマンドをノートに整理した。
+2. Pull Requestの目的とmergeとの違いを理解した。
+3. 新しいブランチでコードを変更・commitできた。
+4. 新規ブランチをGitHubへpushできた。
+5. 初めてPull Requestを作成した。
+6. GitHub上でコードの変更差分を確認した。
+7. Pull Requestをmergeし、masterに変更を統合できた。
+8. GitHubの変更をPCへ取り込み、動作の流れを最後まで確認できた。
+
+課題
+
+最優先：Gitコマンドの自力想起
+
+特に次の使い分けを定着させる。
+
+git add      → commitの準備
+git commit   → 変更を履歴に記録
+git push     → GitHubへ送信
+git pull     → GitHubから変更を取り込む
+git merge    → ブランチの統合
+git remote -v → 接続先の確認
+
+また、git mergeの後にはブランチ名、git commit -mの後にはメッセージを書くことを忘れないようにする。
+
+⑬ 次回の学習予定
+
+第1優先：Git検索練習
+
+実際の開発場面を提示し、必要なコマンドをノーヒントで回答する。
+
+コマンドの名前だけでなく、ファイル名・ブランチ名・オプションまで含めて記述する。
+
+第2優先：CRUDの動作確認
+
+10月27日に完成させたDELETE関数について、テスト用データで実際の削除処理を検証する。
+
+存在しない学生IDを指定した場合の404エラーも確認する。
+
+第3優先：GitHubとCRUDの連携
+
+今後は、Python・FastAPIのコードをGitで管理する実践にも進む。
+
+単独のGit操作から、実際の開発プロジェクトで使うGit・GitHubへ発展させる。
+
+⸻
+
+⑭ 本日の総合評価
+
+学習到達段階：GitHubのPull Requestを使った基本的な開発フローを、一通り実践できた段階。
+
+10月28日は、これまで学習してきたGitのコマンドを組み合わせ、GitHub上でのPull Request作成から統合まで成功した。
+
+特に、ブランチで変更したコードをGitHubへ送信し、PRで差分を確認してからmasterへ統合する一連の流れを実際に経験できたことは重要な成果である。
+
+一方で、操作を説明されれば実行できるものの、コマンドを自力で選択・記述する能力はまだ十分に定着していない。
+
+今後は新しいGit機能を増やすだけでなく、既習コマンドの反復とPython・FastAPIへの応用を重視する。
+
+次回の最優先目標：Gitコマンドの自力再現と、CRUD DELETE関数の実動作確認。
