@@ -3422,3 +3422,322 @@ git remote -v → 接続先の確認
 今後は新しいGit機能を増やすだけでなく、既習コマンドの反復とPython・FastAPIへの応用を重視する。
 
 次回の最優先目標：Gitコマンドの自力再現と、CRUD DELETE関数の実動作確認。
+
+プログラミング学習レジュメ｜2026年10月29日
+
+学習テーマ：Git・GitHub検索練習、SQLiteデータベース調査、DELETE関数の動作テスト準備
+
+① 本日の学習目標
+
+前日までに学習したGitコマンドをノーヒントで思い出せるか確認する。
+
+また、10月27日に自力で作成したdelete_student()関数について、実際にデータを削除できるか検証するための安全なテスト環境を準備する。
+
+本日は既習内容の定着と、データベースの調査・検証を重視した。
+
+⸻
+
+② Git・GitHub検索練習
+
+実際の開発場面を想定し、4問のコマンド記述問題に取り組んだ。
+
+問題	自分の回答	評価
+変更をcommitする準備	git add hello.py	◎
+変更をメッセージ付きで記録	git commit -m "Add student search"	◎
+feature-searchをmasterに統合	git merge feature-search	◎
+GitHubの接続先を確認	思い出せず	×
+
+結果：4問中3問正解。
+
+今回の成果
+
+10月28日には以下の間違いがあった。
+
+* git addとgit pullを混同
+* git commit -mの後にファイル名を記述
+* git mergeの後のブランチ名を忘れる
+
+今回は3つとも、ノーヒントで正確に記述できた。
+
+継続課題
+
+GitHubの接続先確認コマンドは思い出せなかった。
+
+git remote -v
+
+remoteはリモート接続先を表し、-vで登録されているURLなどの情報を表示する。
+
+今後も検索練習で繰り返し確認する。
+
+⸻
+
+③ DELETE関数の確認
+
+10月27日に作成したdelete_student()をJupyter Notebookで開いた。
+
+関数の構成は次のとおり。
+
+1. SQLiteデータベースへ接続
+2. SELECTで学生の存在確認
+3. 存在しない場合は404エラー
+4. scoresテーブルから削除
+5. studentsテーブルから削除
+6. commit・close・return
+
+これまでに関数の定義は成功しているが、実際の削除処理は未実施。
+
+今回は既存データを誤って削除しないよう、まずDBファイルを調査した。
+
+⸻
+
+④ データベースの存在確認
+
+新しくPython標準ライブラリのpathlibを使用した。
+
+from pathlib import Path
+print(Path.cwd())
+print(Path("students.db").exists())
+
+発生した間違い
+
+最初は次のように記述した。
+
+from path import Path
+
+その結果、ModuleNotFoundErrorが発生した。
+
+正しくは、
+
+from pathlib import Path
+
+である。
+
+また、データベース名をstudent.dbと記述していたため、students.dbとの違いを調査することになった。
+
+作業フォルダ
+
+C:\Users\81903
+
+DBの存在確認結果
+
+student.db: True
+students.db: True
+
+両方のファイルが存在していることが判明した。
+
+ただし、Trueはファイルの存在を示すだけで、正しいテーブルやデータが含まれているとは限らない。
+
+⸻
+
+⑤ DB内のテーブルを調査
+
+SQLiteのsqlite_masterを利用して、各DBに含まれるテーブルを確認した。
+
+import sqlite3
+for db in ["student.db", "students.db"]:
+    conn = sqlite3.connect(
+        f"file:{db}?mode=ro",
+        uri=True
+    )
+    tables = conn.execute(
+        "SELECT name FROM sqlite_master WHERE type='table'"
+    ).fetchall()
+    print(db, tables)
+    conn.close()
+
+実行結果
+
+student.db []
+students.db [('students',), ('scores',)]
+
+判明したこと
+
+student.db
+
+テーブルが存在しない。
+
+students.db
+
+studentsとscoresの2つのテーブルが存在する。
+
+そのため、以前作成したDELETE関数が参照しているstudents.dbが、今回の学生管理用データベースであると確認できた。
+
+⸻
+
+⑥ テスト用データベースの作成
+
+既存のstudents.dbを直接変更せず、コピーを作って動作を検証する方針とした。
+
+新しくshutilを利用した。
+
+import shutil
+from pathlib import Path
+test_db = Path("students_test.db")
+if not test_db.exists():
+    shutil.copy2("students.db", test_db)
+    print("テスト用DB作成成功")
+else:
+    print("テスト用DBは既に存在します")
+
+実行結果
+
+テスト用DB作成成功
+
+students_test.dbの作成に成功。
+
+これにより、元のデータベースを変更せずに削除処理を検証するための環境を用意できた。
+
+⸻
+
+⑦ テーブル構造の確認
+
+新しくPRAGMA table_info()を使用し、コピーしたデータベースの列名とデータ型を調査した。
+
+conn = sqlite3.connect(
+    "file:students_test.db?mode=ro",
+    uri=True
+)
+print(conn.execute(
+    "PRAGMA table_info(students)"
+).fetchall())
+print(conn.execute(
+    "PRAGMA table_info(scores)"
+).fetchall())
+conn.close()
+
+studentsテーブル
+
+列名	型	特徴
+id	INTEGER	主キー
+name	TEXT	NULL不可
+
+scoresテーブル
+
+列名	型	特徴
+student_id	INTEGER	主キー
+score	INTEGER	NULL不可
+
+これにより、DELETE関数で使用している次の列名が正しいことを確認できた。
+
+DELETE FROM scores WHERE student_id = ?;
+DELETE FROM students WHERE id = ?;
+
+⸻
+
+⑧ 新しく登場したPython・SQLiteの知識
+
+本日は以下の用語を初めて学習した。
+
+用語	意味	学習優先度
+PRAGMA	SQLiteの設定・テーブル構造などを調査	低
+shutil	ファイルのコピー・移動などに使用	低
+mode=ro	データベースを読み取り専用で開く	中
+Path	ファイルの場所・存在などを扱う	中
+sqlite_master	SQLiteのテーブルなどの定義情報を参照	低
+
+現段階の学習方針
+
+これらの用語は、今すぐ構文を完全暗記する必要はない。
+
+役割を理解し、必要になったときに調べて使用できればよい。
+
+優先すべきなのは、既習のPython・SQL・FastAPIを使ってCRUDを自力実装できるようになること。
+
+そのため、これらの新しい用語は当面、検索練習の対象にはしない。
+
+⸻
+
+⑨ 本日の学習評価
+
+学習項目	評価
+git addの自力記述	◎
+git commitの自力記述	◎
+git mergeの自力記述	◎
+git remote -vの自力想起	×
+pathlibの使用	○（修正あり）
+DBファイルの存在確認	◎
+SQLiteのテーブル調査	◎
+テスト用DBの作成	◎
+PRAGMAによる構造確認	◎
+DELETE関数の実動作	未実施
+404エラーの実動作	未実施
+
+※ データベース調査の◎は、手順に従って操作を成功させた評価であり、新しい構文を自力で再現できる段階という意味ではない。
+
+⸻
+
+⑩ 本日の成果
+
+1. Git検索練習で4問中3問正解した。
+2. 前日間違えていたgit add・commit・mergeを正確に思い出せた。
+3. 2つのDBファイルの存在を確認した。
+4. 本来使用しているDBがstudents.dbであると特定した。
+5. students_test.dbのコピーを作成した。
+6. students・scoresのテーブル構造を確認した。
+7. データベースを安全に調査する方法を経験した。
+
+⑪ 残った課題
+
+① DELETE関数の実動作テスト
+
+テスト用DBは準備できたが、DELETE関数の接続先を変更して実行するところまでは進まなかった。
+
+② Gitコマンドの記憶定着
+
+git remote -vは引き続き思い出せなかった。
+
+その他のコマンドも、一度正解しただけで完全に定着したとは判断せず、定期的に復習する。
+
+③ FastAPIの実装練習
+
+今日はデータベース調査が中心となったため、FastAPIのエンドポイントを実際に書く練習は行わなかった。
+
+⸻
+
+⑫ 次回の学習予定
+
+第1部：DELETE関数をテスト用DBに接続
+
+現在の関数は次のDBを参照している。
+
+conn = sqlite3.connect("students.db")
+
+テスト用に以下へ変更する。
+
+conn = sqlite3.connect("students_test.db")
+
+その後、Jupyterでセルを再実行し、関数を再定義する。
+
+第2部：テストデータの登録
+
+テスト用DBに練習用の学生と点数を登録する。
+
+既存の学生データと重複しないIDを使用する。
+
+第3部：DELETE・404の動作検証
+
+登録したテスト学生を削除し、次の3点を確認する。
+
+1. {"delete_id": ...}が返ること
+2. students・scoresの両方から削除されていること
+3. 存在しない学生IDの場合に404エラーが発生すること
+
+第4部：FastAPI・Git復習
+
+時間があれば、DELETE処理をFastAPIのエンドポイントと接続する練習に進む。
+
+⸻
+
+⑬ 本日の総合評価
+
+学習到達段階：DELETE関数の動作検証に必要なデータベースの調査とテスト環境の準備が完了した段階。
+
+10月29日は、Gitコマンドの自力想起が前日より改善した。
+
+また、単にSQLを書くのではなく、実際のDBファイルの場所・構造を確認し、コピーを利用して安全に検証する流れを経験できた。
+
+一方、DELETE処理そのものはまだ実行していないため、関数の動作が正しいかは未確認である。
+
+新しく登場したPRAGMA・shutil・mode=roなどは、現時点では役割の理解にとどめ、暗記は優先しない。
+
+次回の最優先目標：students_test.dbを使ったDELETE関数の動作確認と404エラーの検証。
