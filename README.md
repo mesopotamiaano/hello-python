@@ -3741,3 +3741,340 @@ conn = sqlite3.connect("students_test.db")
 新しく登場したPRAGMA・shutil・mode=roなどは、現時点では役割の理解にとどめ、暗記は優先しない。
 
 次回の最優先目標：students_test.dbを使ったDELETE関数の動作確認と404エラーの検証。
+
+プログラミング学習レジュメ｜2026年10月30日
+
+学習テーマ：Git検索練習・SQLite DELETE関数の実動作確認・Jupyterデバッグ
+
+① 本日の学習目標
+
+前日に学習したGitコマンドをノーヒントで復習する。
+
+その後、10月29日に準備したstudents_test.dbを使用し、以前自力で作成したdelete_student()関数を実際に動作させる。
+
+特に以下を目標とした。
+
+* DELETE関数の正常な実行
+* students・scoresの削除結果確認
+* 存在しない学生IDでの404処理確認
+* 実際のエラーを調査・修正する経験を積む
+
+⸻
+
+② Git・GitHub検索練習
+
+最初に、Gitコマンドをノートなしで思い出す練習を行った。
+
+問題	自分の回答	評価
+GitHubの接続先URLを確認	git remote -v	◎
+GitHubからPCへ最新の変更を取り込む	git pull	◎
+
+結果：2問中2問正解。
+
+特にgit remote -vは、前日まで何度か思い出せなかったコマンドだったが、今回は正確に回答できた。
+
+Gitコマンドの自力想起が改善している。
+
+ただし、長期的な定着を判断するには今後も反復が必要。
+
+⸻
+
+③ DELETE関数をテスト用DBに接続
+
+前日に作成したテスト用データベースを使用した。
+
+DBファイル	役割
+students.db	元の学生管理DB
+students_test.db	動作確認用コピー
+student.db	テーブルのない別DB
+
+DELETE関数の接続先を次のように変更した。
+
+conn = sqlite3.connect("students_test.db")
+
+発生した問題
+
+最初に修正していたセルが、以前完成させた関数とは異なる不完全なコードだった。
+
+そのコードには関数定義・DELETEの順序・存在確認などに問題があった。
+
+その後、正しいdelete_student()のセルを探し、テスト用DBへの接続に修正した。
+
+学習事項：Jupyterでは、同じ名前の関数を複数回定義できるため、現在どの定義が有効なのか確認する必要がある。
+
+⸻
+
+④ テスト用学生データの登録
+
+SQLiteのINSERT文を使い、テスト用DBに学生と点数を登録した。
+
+使用した主なコード：
+
+conn = sqlite3.connect("students_test.db")
+cursor = conn.cursor()
+cursor.execute(
+    "INSERT INTO students (name) VALUES (?)",
+    ("DELETE_TEST",)
+)
+test_id = cursor.lastrowid
+cursor.execute(
+    "INSERT INTO scores (student_id, score) VALUES (?, ?)",
+    (test_id, 80)
+)
+conn.commit()
+conn.close()
+
+実行結果
+
+最初に学生ID15が登録された。
+
+その後、INSERTのセルを繰り返し実行したため、ID16・17・18も登録された。
+
+この操作自体はテスト用DBで行っていたため、元の学生管理データには影響しない。
+
+学習事項
+
+cursor.lastrowidは、直前に追加した行のIDを取得するために使用する。
+
+また、INSERTセルを再実行すると、新しい学生が追加されるため、関数の定義セルとデータ登録セルを区別する必要がある。
+
+⸻
+
+⑤ DELETE関数の実行と404エラー
+
+最初に次のコードを実行した。
+
+delete_student(test_id)
+
+しかし、次のエラーが発生した。
+
+NameError:
+name 'HTTPException' is not defined
+
+原因
+
+FastAPIのHTTPExceptionがインポートされていなかった。
+
+次のコードを実行し、解消した。
+
+from fastapi import HTTPException
+
+その後、DELETEを再実行したところ、
+
+HTTPException: 404: Student not found
+
+が発生した。
+
+調査で分かったこと
+
+データベースを直接SELECTすると、テスト学生は存在していた。
+
+そのため、データがないのではなく、DELETE関数の現在の実行状態に問題がある可能性が高いと判断した。
+
+⸻
+
+⑥ SELECTによるデータの調査
+
+テスト学生の存在を確認するため、読み取り専用接続でSQLを実行した。
+
+conn = sqlite3.connect(
+    "file:students_test.db?mode=ro",
+    uri=True
+)
+print(conn.execute(
+    "SELECT id, name FROM students WHERE id = 17"
+).fetchone())
+conn.close()
+
+実行結果：
+
+(17, 'DELETE_TEST')
+
+学生ID17が存在することを確認できた。
+
+また、ID15・16もSELECTで存在を確認した。
+
+SQLのスペルミス
+
+途中でSELECTをSELETEと記述し、SQLiteの構文エラーが発生した。
+
+正しいスペルに修正して実行に成功した。
+
+学習事項：エラーメッセージの内容と行番号を確認し、まず問題の発生箇所を特定する。
+
+⸻
+
+⑦ Jupyterの関数再定義
+
+404エラーの調査中、Jupyterの実行番号が重要な手掛かりとなった。
+
+エラー画面には古い関数定義の実行番号In[2]が表示されていた。
+
+そこで、正しいDELETE関数のセルに戻り、Shift + Enterで再実行した。
+
+新しい関数定義の実行番号は[32]となった。
+
+古い関数定義が有効だったことが、404エラーの原因だった可能性が高い。
+
+今回理解したこと
+
+Jupyterでは、コードを画面上で修正しただけでは実行中の関数は更新されない。
+
+変更した関数を使うには、その定義セルをもう一度実行する必要がある。
+
+また、INSERTセルを誤って実行するとデータが増えるため、セルの内容を確認してから実行することが重要。
+
+⸻
+
+⑧ DELETE関数の実行成功
+
+関数を再定義した後、テスト学生ID17で再実行した。
+
+delete_student(17)
+
+実行結果
+
+{'delete_id': 17}
+
+DELETE関数がエラーなく実行され、削除ID17を返すことに成功した。
+
+関数内には次の処理が含まれている。
+
+cursor.execute(
+    "DELETE FROM scores WHERE student_id = ?",
+    (student_id,)
+)
+cursor.execute(
+    "DELETE FROM students WHERE id = ?",
+    (student_id,)
+)
+conn.commit()
+conn.close()
+return {"delete_id": student_id}
+
+正常な返却結果まで確認できた。
+
+ただし、studentsとscoresの実際のレコード消失はまだ確認していない。
+
+⸻
+
+⑨ 現在の到達状況
+
+検証項目	状態
+テスト用DBの作成	完了
+テスト学生の登録	完了
+DELETE関数の修正	完了
+HTTPExceptionのインポート	完了
+Jupyterでの関数再定義	完了
+delete_student(17)の実行	成功
+{'delete_id': 17}の返却	成功
+studentsテーブルの削除確認	未実施
+scoresテーブルの削除確認	未実施
+削除済みIDでの404確認	未実施
+
+DELETE関数の正常な呼び出しには成功したが、テスト全体はまだ完了していない。
+
+⸻
+
+⑩ 本日の学習評価
+
+学習内容	評価
+git remote -vの自力想起	◎
+git pullの自力想起	◎
+INSERTによるテスト学生登録	◎（手順を参照）
+lastrowidによるID取得	◎（手順を参照）
+DELETE関数の接続先変更	○
+HTTPExceptionエラーへの対応	○
+SQLの構文エラー修正	○
+Jupyterのセル操作	△
+DELETE関数の実行	◎
+削除データの検証	未実施
+
+※ ◎は今回の操作や回答が成功したことを意味し、すべて自力で記述できることを示す評価ではない。
+
+⸻
+
+⑪ 本日の成果
+
+1. Git検索練習で2問とも正解した。
+2. テスト用の学生データを登録できた。
+3. SQLiteのSELECTで特定の学生の存在を確認できた。
+4. NameErrorと404エラーの原因を段階的に調査できた。
+5. Jupyterで関数を再定義する重要性を学んだ。
+6. DELETE関数を実際に動かし、削除IDを正しく返せた。
+
+今回の最大の成果は、SQL文の記述練習から、実際のデータベースを使用した関数の動作確認へ進んだことである。
+
+⸻
+
+⑫ 今後の課題
+
+優先度①：DELETEの完全な動作確認
+
+学生ID17について、以下のSQLで本当に削除されているか確認する。
+
+SELECT * FROM students WHERE id = 17;
+SELECT * FROM scores WHERE student_id = 17;
+
+どちらも結果が空であれば、両テーブルから削除できたことになる。
+
+その後、削除済みのID17でもう一度DELETEを呼び出し、404エラーを確認する。
+
+優先度②：Jupyterの操作
+
+* 関数定義セルと実行セルを区別する
+* 修正した関数は再実行する
+* INSERTセルを不用意に複数回実行しない
+* 実行番号とエラー表示を確認する
+
+優先度③：CRUD・FastAPIの自力実装
+
+今後は基本のDELETE処理だけでなく、POST・GET・PUT・DELETEを一つの学生管理APIとしてつなげる練習に進む。
+
+SQL、DB関数、FastAPI、Pydanticの関係を理解し、自力記述の割合を増やす。
+
+⸻
+
+⑬ 新しい知識の暗記について
+
+今回使用したmode=ro、PRAGMA、shutilなどは、現時点では構文の完全暗記を優先しない。
+
+特に重視するのは次の内容。
+
+自力記述を目指す： SELECT・INSERT・UPDATE・DELETE、WHERE、fetchone・fetchall、commit・close、HTTPException。
+
+必要なときに調べて使う： PRAGMA、shutil、Path、mode=roなど。
+
+新しい技術を増やしすぎるのではなく、基本的なCRUDを確実に実装できるようになることを優先する。
+
+⸻
+
+⑭ 次回の学習予定
+
+第1部：Git・SQL検索練習（5〜10分）
+
+直近で学習したGitコマンドやSQLの基本構文を復習する。
+
+第2部：DELETE関数の検証完了（10〜15分）
+
+students・scoresからID17が削除されたことを確認し、2回目のDELETEによる404エラーを検証する。
+
+第3部：FastAPI実装練習（20〜25分）
+
+DELETE関数とFastAPIのエンドポイントをつなぐ練習を行う。
+
+時間が余ればPOST・GET・PUTの復習を取り入れる。
+
+⸻
+
+⑮ 本日の総合評価
+
+学習到達段階：DELETE関数の実動作に成功し、デバッグと動作検証の基礎を経験した段階。
+
+10月30日は、作成済みのDELETE関数を実際のSQLiteデータベースで動かすことに成功した。
+
+途中でエラーが続いたものの、エラーメッセージを確認し、データベースの状態とJupyterの関数定義を調べながら問題を解決した。
+
+今後は、コードがエラーなく動くことだけでなく、期待した結果がデータベースに反映されているかまで検証する習慣を身につける。
+
+次回の最優先目標：ID17の削除確認と404テストを完了し、FastAPIの実装練習に戻ること。
