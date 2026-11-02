@@ -4269,3 +4269,291 @@ PCを使えない場合は、スマホでのコード穴埋め・自力記述に
 一方、fetchone・fetchallの違いや404エラーの基本的な仕組みは正しく説明できた。
 
 次回の最優先目標：SELECT文の自力記述と、DELETE関数の最終動作検証。
+
+11月2日｜Python・SQL・FastAPI・Git 学習レジュメ
+
+① 今日の学習内容
+
+今日は、SQLiteのDELETE処理が正しく動いているかを確認し、FastAPIから削除処理を呼び出すところまで進めた。
+
+また、Pythonの関数・引数・returnの復習と、FastAPI・Python・SQLがどのようにつながっているのかを整理した。
+
+今日の重要な課題は、コードの書き方だけでなく、プログラム全体の仕組みを理解すること。
+
+⸻
+
+② Pythonの関数・引数・return
+
+関数の基本
+
+def double(number):
+    return number * 2
+result = double(5)
+
+* def：関数を定義する
+* number：引数を受け取る変数
+* double(5)：関数を呼び出し、5を渡す
+* return：処理結果を呼び出し元に返す
+* result：返された値を受け取る
+
+この場合、result は 10 になる。
+
+printとreturnの違い
+
+def calculate():
+    x = 5
+    print(x * 3)
+result = calculate()
+
+画面には 15 が表示されるが、result には None が入る。
+
+理由は、print() は表示する命令であり、関数の結果を返す命令ではないため。
+
+def calculate():
+    x = 5
+    return x * 3
+
+こちらの場合は、呼び出し元に 15 が返される。
+
+覚えること：printは表示、returnは呼び出し元に値を返す。
+
+また、* は掛け算、** は累乗を表す。
+
+⸻
+
+③ SQL・SQLiteの復習
+
+SQLiteはデータベースを管理する仕組みであり、SQLはデータを操作するための言語。
+
+SELECT（取得）
+
+SELECT name
+FROM students
+WHERE id = 5;
+
+ID5の学生の名前だけを取得する。
+
+SELECT *
+FROM students
+WHERE id = 5;
+
+* は全列を意味する。
+
+今日の復習では、名前だけを取得する問題で * と回答したため、用途による使い分けを復習した。
+
+DELETE（削除）
+
+DELETE FROM scores
+WHERE student_id = 17;
+DELETE FROM students
+WHERE id = 17;
+
+学生17の点数情報と学生情報を削除する。
+
+今回のデータ構造では、scores と students の2つのテーブルを扱っている。
+
+Python側ではSQLを実行した後、conn.commit() で変更を確定する。
+
+⸻
+
+④ DELETE処理の動作確認
+
+今回は元のデータを保護するため、students_test.db を使ってテストした。
+
+削除できたか確認
+
+import sqlite3
+conn = sqlite3.connect("students_test.db")
+print(conn.execute(
+    "SELECT * FROM students WHERE id = 17"
+).fetchall())
+print(conn.execute(
+    "SELECT * FROM scores WHERE student_id = 17"
+).fetchall())
+conn.close()
+
+実行結果：
+
+[]
+[]
+
+[] は検索結果が空であることを意味する。
+
+つまり、学生17のデータが両方のテーブルから削除されていることを確認できた。
+
+404エラーの確認
+
+削除済みの学生17をもう一度削除しようとすると、404エラーになった。
+
+これは正常な動作。
+
+404は、要求されたデータが存在しないことを表すHTTPステータスコード。
+
+⸻
+
+⑤ FastAPIのDELETE処理
+
+今日、自力で記述できたコード。
+
+@app.delete("/students/{student_id}")
+def delete_student_api(student_id: int):
+    return delete_student(student_id)
+
+それぞれの役割：
+
+* @app.delete(...)：DELETEリクエストとURLを関数に対応させる
+* def delete_student_api(...)：FastAPIから呼び出されるPython関数
+* student_id: int：URLから学生IDを整数として受け取る
+* delete_student(student_id)：データベース処理を担当する別の関数を呼び出す
+* return：その関数の結果を呼び出し元へ返す
+
+重要なのは、FastAPIの関数そのものがSQLでデータを削除しているわけではないということ。
+
+FastAPI側の関数がDB処理用のPython関数を呼び出し、その関数がSQLを実行する。
+
+⸻
+
+⑥ FastAPIの動作テスト
+
+今回は TestClient を使って、HTTPリクエストを再現した。
+
+from fastapi.testclient import TestClient
+client = TestClient(app)
+response = client.delete("/students/17")
+print(response.status_code)
+print(response.json())
+
+実行結果：
+
+404
+{"detail": "Student not found"}
+
+すでに削除した学生を指定したため、404が返された。
+
+これにより、FastAPI経由でも404エラーを正しく返せることを確認できた。
+
+なお、FastAPI経由で存在する学生を削除する成功パターンは、まだ確認していない。
+
+⸻
+
+⑦ Webアプリが動く仕組み
+
+今回、最も理解を深める必要がある部分。
+
+処理の全体像
+
+1. クライアント：学生18を削除したいと依頼する。
+2. FastAPI：DELETEリクエストを受け取る。
+3. PythonのDB関数：学生の存在確認などを行い、SQLを実行する。
+4. SQL・SQLite：保存されているデータを実際に削除する。
+5. return：処理結果を呼び出し元へ返し、最終的にクライアントへ応答する。
+
+役割の整理：
+
+技術	役割
+FastAPI	外部からのリクエストの受付
+Python	処理内容の制御
+SQL	データの取得・登録・更新・削除
+SQLite	データの保存・管理
+Pydantic	入出力データの形式や値の検証
+Git	コードの変更履歴の管理
+GitHub	コードの共有・共同開発
+
+現在作っているのは、一般利用者向けの画面ではなく、Webアプリの裏側にあるバックエンドAPI。
+
+⸻
+
+⑧ 新しいコードについて
+
+今日の作業で使われた以下のコードは、主にデータベースの調査や安全な動作確認のためのもの。
+
+* Path：ファイルの確認
+* sqlite_master：テーブルの確認
+* PRAGMA：テーブル構造の確認
+* shutil.copy2()：ファイルのコピー
+* mode=ro：読み取り専用で開く
+
+これらは今すぐ暗記する必要はない。
+
+優先して覚えるのは、Pythonの基本文法、CRUD、FastAPI、returnなど、アプリ開発の中心となる仕組み。
+
+⸻
+
+⑨ Git・GitHubの現在地
+
+基本操作は一通り学習済み。
+
+* git status：変更状況の確認
+* git diff：変更内容の確認
+* git add：変更をステージング
+* git commit：変更履歴を記録
+* git push：リモートへ送信
+* git pull：リモートの変更を取り込む
+* git branch：ブランチの確認
+* git merge：変更を統合
+* Pull Request：変更を提案・確認して統合する仕組み
+
+今後はGitの基礎だけを繰り返すのではなく、Pythonの成果物をGitHubで管理しながら定着させる。
+
+コンフリクト解決や変更の取り消しなどは、今後の学習課題。
+
+⸻
+
+⑩ 今日分かった弱点
+
+個々のコードは覚え始めているが、それぞれがどのようにつながって動くのか、全体像の理解が十分ではない。
+
+特に次の部分を強化する必要がある。
+
+* Pythonの関数・引数・return
+* PythonからSQLiteを操作する仕組み
+* FastAPIがPythonの関数を呼び出す仕組み
+* クライアントからデータベースまでの処理の流れ
+
+コードを正しく書けたとしても、その意味を説明できなければ、理解が定着したとは判断しない。
+
+⸻
+
+⑪ 今後の学習方針
+
+11月の目標
+
+Python・SQL・SQLite・FastAPI・Pydanticの基礎を理解し直し、Git・GitHubを使った小規模な開発へ発展させる。
+
+学習順序は以下のとおり。
+
+1. Python基礎の復習
+2. SQL・SQLiteの仕組みの理解
+3. CRUDの自力実装
+4. FastAPI・Pydanticとの接続
+5. Git・GitHubでの成果物管理
+
+新しい技術を増やすより、既習内容を組み合わせて自分で開発できる状態を目指す。
+
+将来的な目標
+
+2027年10月のEpistra長期インターン開始を目指し、バックエンド開発を基礎から実践まで身につける。
+
+また、友達との共同開発では、趣味・価値観・スキルで人をつなぐ、クラン機能やランキングを備えたコミュニティアプリを構想している。
+
+最初はプロフィール登録・検索・クラン作成などの基本機能から始め、学んだ技術を実際の成果物に応用していく。
+
+長期的には、Hondaを本命としてAI・ロボティクス分野への就職を目指す。
+
+⸻
+
+⑫ 次回の学習
+
+次回は新しい技術に進まず、まずPythonの関数・引数・returnを復習する。
+
+その後、簡単なGET処理を題材に、Python・SQL・FastAPIのつながりを確認する。
+
+学習の進め方は、仕組みの説明 → 動作確認 → 自分の言葉で説明 → 自力記述とする。
+
+今日の結論
+
+コードを書くことと、仕組みを理解することは別。
+
+今後は、書き方の暗記だけでなく、なぜそのコードが必要で、実行すると何が起こるのかを理解しながら学習する。
+
+11月は基礎の定着を優先し、最終的には自力で学生管理APIを組み立てられる状態を目指す。
