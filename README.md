@@ -4557,3 +4557,586 @@ Python・SQL・SQLite・FastAPI・Pydanticの基礎を理解し直し、Git・Gi
 今後は、書き方の暗記だけでなく、なぜそのコードが必要で、実行すると何が起こるのかを理解しながら学習する。
 
 11月は基礎の定着を優先し、最終的には自力で学生管理APIを組み立てられる状態を目指す。
+
+11月3日｜Python・SQL・FastAPI・Git 学習レジュメ
+
+① 今日の学習概要
+
+今日は、Pythonの基礎からSQL・SQLite・FastAPI・Pydanticまでを復習し、Webアプリのバックエンドがどのような仕組みで動くのかを重点的に学習した。
+
+友達と共同開発を構想しているマッチング・クランアプリを題材に、クランの登録・取得などの処理を考えた。
+
+今日の重点目標
+
+* Pythonの関数・引数・戻り値を理解する
+* PythonとSQLiteの接続を理解する
+* FastAPIとPydanticの役割を区別する
+* データベースへの保存とクライアントへの返却を理解する
+* Git・GitHubの基本操作を復習する
+
+⸻
+
+② Python｜関数・引数・return
+
+関数の基本
+
+def get_score(student_id):
+    return 80
+def show_score(student_id):
+    score = get_score(student_id)
+    return score + 10
+result = show_score(3)
+
+処理の流れ：
+
+1. show_score(3) が呼び出される。
+2. student_id に 3 が入る。
+3. get_score(3) が呼び出される。
+4. get_score() が 80 を返す。
+5. score に 80 が入る。
+6. score + 10 が計算される。
+7. show_score() が 90 を返す。
+8. result に 90 が入る。
+
+重要な用語
+
+用語	意味
+def	関数を定義する
+引数	関数に渡す値
+変数	データを保持する名前
+return	呼び出し元へ結果を返す
+戻り値	関数から返される値
+print()	画面などに値を表示する
+
+重要：関数を定義することと、関数を呼び出すことは違う。
+
+また、return は自分自身に値を返すのではなく、関数を呼び出した場所に値を返す。
+
+⸻
+
+③ Python｜辞書・変数・データ型
+
+クラン情報を返す関数を学習した。
+
+def create_clan(clan_id, name):
+    return {
+        "id": clan_id,
+        "name": name
+    }
+result = create_clan(10, "読書クラブ")
+
+結果：
+
+{
+    "id": 10,
+    "name": "読書クラブ"
+}
+
+変数と型の違い
+
+def create_clan(clan_id: int, name: str):
+
+コード	意味
+clan_id	IDを受け取る変数
+int	整数型
+name	名前を受け取る変数
+str	文字列型
+"読書クラブ"	文字列の値
+
+辞書の基本
+
+return {
+    "name": name,
+    "status": "created"
+}
+
+* "name"：辞書のキー
+* name：変数
+* "created"：固定の文字列
+
+今日の重要な復習ポイント：str は文字列そのものではなく、文字列というデータ型を表す。
+
+今日間違えた例
+
+誤り：
+
+return {"name": str}
+
+正解：
+
+return {"name": name}
+
+str は型を表し、name は実際のクラン名を受け取る変数。
+
+今後は、変数・データ型・文字列・辞書のキーを正確に区別する。
+
+⸻
+
+④ SQL｜CRUDの役割
+
+SQLは、データベースに保存されている情報を操作するための言語。
+
+SQL	役割	使用例
+SELECT	取得	クラン情報を見る
+INSERT	登録	新しいクランを作る
+UPDATE	更新	クラン名を変更する
+DELETE	削除	クランを削除する
+
+INSERT
+
+INSERT INTO clans (name)
+VALUES ('AI研究会');
+
+新しいクラン情報を登録する。
+
+SELECT
+
+SELECT name
+FROM clans
+WHERE id = 5;
+
+ID5のクラン名を取得する。
+
+新しく保存する場合はINSERT、保存済みのデータを取り出す場合はSELECT。
+
+今日の検索練習では、この違いを正しく回答できた。
+
+⸻
+
+⑤ SQLite｜PythonからDBを操作する
+
+クランを登録する関数
+
+import sqlite3
+def save_clan(name):
+    conn = sqlite3.connect("clans.db")
+    conn.execute(
+        "INSERT INTO clans (name) VALUES (?)",
+        (name,)
+    )
+    conn.commit()
+    conn.close()
+    return {"name": name}
+
+※ clans テーブルが作成済みであることを前提とする。
+
+処理の順番
+
+1. connect()：SQLiteのデータベースに接続する。
+2. execute()：SQLを実行する。
+3. commit()：変更を確定する。
+4. close()：DB接続を閉じる。
+5. return：呼び出し元へ結果を返す。
+
+SQLのプレースホルダー
+
+name = "ゲーム制作部"
+conn.execute(
+    "INSERT INTO clans (name) VALUES (?)",
+    (name,)
+)
+
+? は、SQLに値を渡す場所を表す。
+
+今回は変数 name の値である "ゲーム制作部" が渡される。
+
+(name,) は、1つの値を持つタプル。
+
+プレースホルダーを使うことで、SQLインジェクションのリスクを抑えられる。
+
+SELECTとfetchone()
+
+cursor = conn.execute(
+    "SELECT name FROM clans WHERE name = ?",
+    ("ゲーム制作部",)
+)
+result = cursor.fetchone()
+
+* SELECT：条件に合うデータを検索する。
+* fetchone()：検索結果から1行を取得する。
+* 該当データがなければ None になる。
+
+今日の問題では、SELECT と fetchone() の役割を正しく説明できた。
+
+⸻
+
+⑥ DBへの保存とreturnの違い
+
+今日、特に重要だった考え方。
+
+conn.execute(
+    "INSERT INTO clans (name) VALUES (?)",
+    ("AI研究会",)
+)
+conn.commit()
+return {"name": "AI研究会"}
+
+それぞれの仕事は異なる。
+
+処理	目的
+INSERT	データを登録する
+commit()	DBへの変更を確定する
+return	結果を呼び出し元へ返す
+
+returnを削除した場合
+
+commit() が成功していれば、データは保存される。
+
+しかし、関数に明示的な戻り値がないため、戻り値は None になる。
+
+INSERT・commitがない場合
+
+@app.post("/clans")
+def create_clan_api():
+    return {"message": "登録しました"}
+
+このコードは登録完了というメッセージを返すだけで、データベースへの保存は行わない。
+
+DBへの保存と、クライアントへの返却は別々の処理である。
+
+この違いは今日の問題で正しく理解できた。
+
+⸻
+
+⑦ FastAPI｜APIの基本構造
+
+FastAPIは、WebアプリのバックエンドでHTTPリクエストを受け付け、Pythonの処理を実行して結果を返すためのフレームワーク。
+
+GET
+
+@app.get("/clans/{clan_id}")
+def get_clan_api(clan_id: int):
+    clan = get_clan_from_db(clan_id)
+    return clan
+
+例えば、クライアントが次のリクエストを送る。
+
+GET /clans/5
+
+処理の順番：
+
+1. FastAPIがリクエストを受け取る。
+2. clan_id に 5 が入る。
+3. get_clan_from_db(5) を呼び出す。
+4. DBから取得した情報が clan に入る。
+5. return clan で結果を返す。
+
+関数の呼び出しとreturn
+
+clan = get_clan_from_db(clan_id)
+return clan
+
+これは次のようにも書ける。
+
+return get_clan_from_db(clan_id)
+
+DB関数を呼び出す処理と、結果を返す処理を区別する。
+
+return がない場合、FastAPIは通常、JSONの null を返す。
+
+⸻
+
+⑧ Pydantic｜入力データの検証
+
+Pydanticは、受け取ったデータの項目や型を定義し、検証するために使う。
+
+モデルの作成
+
+from pydantic import BaseModel
+class ClanCreate(BaseModel):
+    name: str
+    description: str
+    members: int
+
+各要素の役割
+
+コード	役割
+BaseModel	Pydanticモデルの基底クラス
+ClanCreate	入力データの形式を定義したモデル
+name	クラン名の項目
+description	説明文の項目
+members	人数の項目
+str	文字列型
+int	整数型
+
+データの取り出し
+
+data = ClanCreate(
+    name="ゲーム制作部",
+    description="みんなでゲームを作る",
+    members=5
+)
+
+コード	結果
+data.name	"ゲーム制作部"
+data.description	"みんなでゲームを作る"
+data.members	5
+
+data.項目名 で、指定した項目の値を取り出せる。
+
+data.int や data.str ではない。
+
+型検証について
+
+members: int
+
+これは、members に整数を指定するという意味。
+
+Pydanticは通常、変換可能な文字列などを整数に変換できるが、変換できなければ検証エラーになる。
+
+⸻
+
+⑨ FastAPI・Pydantic・SQLiteの接続
+
+今日学習した内容を組み合わせると、次のようになる。
+
+from fastapi import FastAPI
+from pydantic import BaseModel
+app = FastAPI()
+class ClanCreate(BaseModel):
+    name: str
+@app.post("/clans")
+def create_clan_api(data: ClanCreate):
+    return save_clan(data.name)
+
+※ save_clan() はDBへの保存処理を行う別のPython関数。
+
+各部分の役割
+
+@app.post("/clans")
+
+クラン登録用のPOSTリクエストを受け付ける。
+
+def create_clan_api(data: ClanCreate):
+
+* data：入力データを受け取る変数
+* ClanCreate：Pydanticモデル
+
+return save_clan(data.name)
+
+* data.name：クラン名を取り出す
+* save_clan()：DB処理を担当する関数を呼び出す
+* return：その結果をクライアントへ返す
+
+今日の自力記述での間違い
+
+誤り：
+
+def register_clan_api(date: ClanCreate)
+    return save_clan(data.int)
+
+正解：
+
+def register_clan_api(data: ClanCreate):
+    return save_clan(data.name)
+
+修正点：
+
+1. date と data のように変数名を混同しない。
+2. def の末尾には : を付ける。
+3. data.int ではなく、取り出したい項目名を書く。
+4. return の行にはインデントを付ける。
+
+⸻
+
+⑩ 実際のWebアプリの処理全体
+
+友達との共同開発を想定した、クラン登録の流れ。
+
+① フロントエンド
+
+利用者がクラン名を入力し、登録ボタンを押す。
+
+↓
+
+② FastAPI
+
+POSTリクエストを受け取る。
+
+↓
+
+③ Pydantic
+
+クラン名などの入力データを検証する。
+
+↓
+
+④ PythonのDB関数
+
+save_clan() が呼び出される。
+
+↓
+
+⑤ SQL・SQLite
+
+INSERT を実行して commit() で保存する。
+
+↓
+
+⑥ return
+
+登録結果をFastAPI経由でクライアントへ返す。
+
+この一連の流れが、バックエンド開発の基本となる。
+
+⸻
+
+⑪ 実践｜不具合の原因を考える
+
+今日はコードの暗記だけでなく、実際のアプリで起こりそうな問題にも挑戦した。
+
+問題1：クランを登録しても、アプリを開き直すと消えている
+
+回答：
+
+conn.commit() が抜けていないか確認する。
+
+正解。
+
+ただし、実際にはINSERTの実行状況や、接続先DBも確認する必要がある。
+
+問題2：DBには登録されているのに、APIの登録結果が返らない
+
+回答：
+
+return がないため、クライアントへ結果を返せない。
+
+正解。
+
+DBの保存処理とAPIの返却処理を区別できていた。
+
+今日の成果
+
+この2問は、コードを暗記するだけではなく、処理の仕組みから原因を考える練習になった。
+
+実際のバックエンド開発では、どの段階で問題が発生しているのかを切り分ける力が重要。
+
+⸻
+
+⑫ Git・GitHub復習
+
+git commit
+
+問題：
+
+ステージングした変更を、Gitの履歴として記録するコマンドは？
+
+回答：
+
+git commit
+
+正解。
+
+一般的には、変更内容を説明するメッセージを付けて使う。
+
+git commit -m "Add clan registration API"
+
+Gitの基本的な流れ
+
+git status
+git add .
+git commit -m "Add clan registration API"
+git push
+
+* git status：現在の変更状況を確認
+* git add .：カレントディレクトリ以下の変更をステージング
+* git commit：変更を履歴として記録
+* git push：リモートリポジトリへ送信
+
+今後は、GitHubで友達と共同開発しながら、ブランチ・Pull Request・mergeなどを実践する。
+
+⸻
+
+⑬ 今日の理解度評価
+
+分野	評価	現状
+Python関数・引数・return	○	読解は改善、自力記述は継続練習
+辞書・変数・型	△〜○	型と値を混同することがある
+SQLのCRUD	◎	各SQLの役割を理解
+SQLiteの基本操作	○〜◎	connect・execute・commitを説明できた
+FastAPIの処理の流れ	○	関数の呼び出しと返却を理解
+Pydantic	△	モデル・変数・項目名の区別に課題
+APIの自力記述	△	文法と変数名の修正が必要
+不具合の原因調査	◎	commit・returnの不足を特定
+Gitの基本操作	○	commitを正しく回答
+
+※ 今日の問題への回答を基にした評価。PCでの実装・動作確認まで達成したという意味ではない。
+
+⸻
+
+⑭ 今後の課題と学習方針
+
+最優先：Pydantic・変数・型の理解
+
+特に以下のコードを正しく読み書きできるようにする。
+
+class ClanCreate(BaseModel):
+    name: str
+@app.post("/clans")
+def create_clan_api(data: ClanCreate):
+    return save_clan(data.name)
+
+覚えるポイント：
+
+* ClanCreate：モデル
+* data：変数
+* name：項目名
+* str：型
+* data.name：項目の値を取り出す
+
+次の目標：APIの自力実装
+
+これまでの穴埋めや選択問題から、短いコードを自分で組み立てる練習へ進む。
+
+さらにPCで実際に動作させ、入力・DBへの保存・返却結果を一つずつ確認する。
+
+11月の学習方針
+
+1. Python基礎を定着させる
+2. SQL・SQLiteの処理を理解する
+3. FastAPI・Pydanticを組み合わせる
+4. CRUDを自力で実装する
+5. Git・GitHubで成果物を管理する
+
+理解が不十分なまま新しい技術を増やさず、既習内容を自分で説明・実装できることを優先する。
+
+⸻
+
+⑮ 将来の開発・キャリアへのつながり
+
+現在はPython・SQL・FastAPIを中心にバックエンドを学習中。
+
+友達との共同開発では、趣味・価値観・スキルで人をつなぐマッチング・コミュニティアプリを構想している。
+
+今後、プロフィール管理、クラン作成、マッチング、ランキングなどを段階的に実装する予定。
+
+さらに、pytestによる自動テスト、Docker、PostgreSQL、GitHubでの共同開発にも発展させる。
+
+2027年10月のEpistra長期インターン開始を目指し、実践的なバックエンド開発経験を積む。
+
+長期的にはHondaでのAI・ロボティクス分野への就職を目標とする。
+
+⸻
+
+⑯ 次回の学習内容
+
+次回はPydanticとFastAPIの接続を重点的に復習する。
+
+ただし、同じ穴埋めを繰り返すのではなく、次の順序で学習する。
+
+1. 関数・変数・データ型の短い復習
+2. Pydanticモデルを自分で定義
+3. FastAPIのPOSTを自力記述
+4. SQLiteへの保存処理を組み合わせる
+5. PCで実行・動作確認
+6. Gitで変更を記録
+
+今日の結論
+
+Pythonの関数、SQL、SQLite、FastAPI、Pydanticは、それぞれ別々の役割を持ちながら、一つのバックエンドを構成している。
+
+今日の学習では、データベースへの保存とAPIからの結果の返却を区別できるようになり、不具合の原因についても正しく考えられた。
+
+一方、Pydanticの変数・型・項目名や、APIを最初から自力で書く部分には課題が残った。
+
+次回はこの弱点を強化し、コードを理解する段階から、自分で組み立てて動かす段階へ進む。
