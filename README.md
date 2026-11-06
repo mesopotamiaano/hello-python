@@ -5517,3 +5517,532 @@ print(result)
 | VS CodeでPythonを記述 | ◎ | 自力で記述できた |
 | Pythonファイルの実行 | ◎ | 成功 |
 | 変数への代入 | ◎ | 自力
+
+# 11月6日｜Python・SQLite・SQL・VS Code 学習レジュメ
+
+## ① 今日の学習概要
+
+今日はVS Codeを使用して、Pythonの関数・辞書・returnの復習から始め、SQLiteのデータベース作成とSQLの基本構造まで学習した。
+
+友達と共同開発を構想しているマッチング・クランアプリを題材に、クラン情報をプログラム内で扱う方法と、データベースに保存する仕組みを確認した。
+
+**今日の重点目標**
+
+- Pythonの関数・引数・returnを復習する
+- 辞書を返す関数を自力で作成する
+- VS Codeでコードを書き、保存・実行する
+- PythonからSQLiteへ接続する
+- CREATE TABLEの役割を理解する
+- SQLのテーブル構造とデータ登録の違いを理解する
+
+---
+
+## ② Pythonの関数・引数・return
+
+### 復習したコード
+
+```python
+def get_clan_name(name):
+    return name
+
+result = get_clan_name("ゲーム制作部")
+print(result)
+```
+
+### 各コードの役割
+
+| コード | 意味 |
+|---|---|
+| `def` | 関数を定義する |
+| `get_clan_name` | 関数名 |
+| `name` | 引数を受け取る変数 |
+| `get_clan_name("ゲーム制作部")` | 関数を呼び出す |
+| `return name` | 呼び出し元へ値を返す |
+| `result` | 戻り値を受け取る変数 |
+| `print(result)` | 結果を画面に表示する |
+
+### 実行の流れ
+
+1. `get_clan_name("ゲーム制作部")` で関数を呼び出す。
+2. 文字列が引数 `name` に渡される。
+3. `return name` で値を返す。
+4. 戻り値が `result` に入る。
+5. `print(result)` で表示する。
+
+**重要：関数の呼び出し・return・printは、それぞれ異なる役割を持つ。**
+
+今日の復習では、returnとprintの役割を説明できた一方、関数を呼び出すことの説明に少し曖昧さが残った。
+
+---
+
+## ③ Python｜辞書を返す関数の作成
+
+今日はVS Codeの `clan_practice.py` を使用して、辞書を返す関数を作成した。
+
+### 最初に書いたコード
+
+```python
+def create_clan(name):
+    return name
+```
+
+このコードは、引数として受け取った名前だけを返す。
+
+しかし、今回の目的はクラン名と状態をまとめた辞書を返すことだった。
+
+### 修正後のコード
+
+```python
+def create_clan(name):
+    return {
+        "name": name,
+        "status": "created"
+    }
+
+result = create_clan("AI研究所")
+
+print(result)
+```
+
+期待される出力：
+
+```python
+{'name': 'AI研究所', 'status': 'created'}
+```
+
+### 辞書の構造
+
+```python
+{
+    "name": name,
+    "status": "created"
+}
+```
+
+| コード | 意味 |
+|---|---|
+| `"name"` | 辞書のキー |
+| `name` | クラン名が入っている変数 |
+| `"status"` | 辞書のキー |
+| `"created"` | 固定の文字列 |
+| `{}` | 辞書を表す |
+
+### 今日の重要ポイント
+
+**returnで辞書を返す場合、辞書全体が戻り値になる。**
+
+これまでは文字列だけを返す関数を練習していたが、今日は複数の項目をまとめて返す関数へ発展した。
+
+---
+
+## ④ 辞書から特定の値を取り出す
+
+作成した辞書からクラン名だけを取得する練習を行った。
+
+```python
+print(result["name"])
+```
+
+実行結果：
+
+```text
+AI研究所
+```
+
+### コードの意味
+
+- `result`：辞書が入っている変数
+- `["name"]`：辞書のキーを指定する
+- `print()`：取得した値を表示する
+
+例えば、
+
+```python
+clan = {
+    "name": "AI研究所",
+    "status": "created"
+}
+```
+
+なら、
+
+```python
+print(clan["name"])
+```
+
+は「AI研究所」を表示する。
+
+また、
+
+```python
+print(clan["status"])
+```
+
+は「created」を表示する。
+
+**辞書はキーを指定することで、必要な項目の値を取得できる。**
+
+これは今後、FastAPIでデータを返す際にも活用する。
+
+---
+
+## ⑤ VS Code｜保存と実行の基本
+
+今日は、コードの変更内容が保存されておらず、意図した結果が表示されない場面があった。
+
+### 今後の実行手順
+
+1. VS Codeでコードを書く。
+2. `Ctrl + S` で保存する。
+3. PowerShellでPythonファイルを実行する。
+4. ターミナルの結果を確認する。
+
+```powershell
+python clan_practice.py
+```
+
+### 今日の問題点
+
+コードを書き換えていても、保存していなければ、実行されるファイルには変更が反映されない。
+
+また、実行するファイル名を間違えると、目的のプログラムが実行されない。
+
+### 対策
+
+**コードを修正したら、保存してから実行することを習慣化する。**
+
+---
+
+## ⑥ SQLite｜データベースへの接続
+
+ここから、新しいファイル `db_practice.py` を使用した。
+
+### 基本コード
+
+```python
+import sqlite3
+
+conn = sqlite3.connect("clans_practice.db")
+
+print("データベースに接続しました")
+
+conn.close()
+```
+
+### 各部分の役割
+
+| コード | 意味 |
+|---|---|
+| `import sqlite3` | PythonでSQLiteを使用する |
+| `sqlite3.connect()` | SQLiteのデータベースへ接続する |
+| `"clans_practice.db"` | 接続するDBファイル |
+| `conn` | 接続を扱う変数 |
+| `conn.close()` | DB接続を閉じる |
+
+### 今日の理解で修正した部分
+
+最初は、`sqlite3.connect()` を「SQLにPythonファイルをつなげる」と説明した。
+
+正しくは、
+
+**Pythonのプログラムから、SQLiteのデータベースファイルに接続する処理。**
+
+### 3つの違い
+
+| 名前 | 役割 |
+|---|---|
+| `db_practice.py` | Pythonのコードを書くファイル |
+| `clans_practice.db` | データを保存するDBファイル |
+| SQL | データベースを操作するための言語 |
+
+SQLは接続先ではなく、データを操作するための命令を記述する言語である。
+
+---
+
+## ⑦ SQL｜CREATE TABLEの学習
+
+今日は、SQLiteの中にクラン情報を保存するためのテーブルを作成した。
+
+### 実行したコード
+
+```python
+import sqlite3
+
+conn = sqlite3.connect("clans_practice.db")
+
+conn.execute("""
+CREATE TABLE IF NOT EXISTS clans (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL
+)
+""")
+
+conn.commit()
+conn.close()
+
+print("clansテーブルを作成しました")
+```
+
+### CREATE TABLEの意味
+
+```sql
+CREATE TABLE IF NOT EXISTS clans (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL
+);
+```
+
+これは、**クラン情報を保存するための表の構造を作成するSQL**である。
+
+### 各部分の意味
+
+| SQL | 意味 |
+|---|---|
+| `CREATE TABLE` | 新しいテーブルを作る |
+| `IF NOT EXISTS` | 同じ名前のテーブルが存在しなければ作る |
+| `clans` | テーブル名 |
+| `id` | クランを識別する番号の列 |
+| `INTEGER` | 整数型 |
+| `PRIMARY KEY` | 各行を一意に識別する主キー |
+| `name` | クラン名の列 |
+| `TEXT` | 文字列を保存する型 |
+| `NOT NULL` | NULLという値のない状態を禁止する |
+
+### PRIMARY KEY
+
+```sql
+id INTEGER PRIMARY KEY
+```
+
+これは、`id` を各クランを識別するための主キーとして設定することを意味する。
+
+SQLiteでは、この定義により、IDを省略して登録した場合に整数のIDを自動的に割り当てられる。
+
+### NOT NULL
+
+```sql
+name TEXT NOT NULL
+```
+
+クラン名を保存するための列を定義している。
+
+`NOT NULL` によってNULL値は保存できない。
+
+ただし、空文字列まで禁止するわけではない。
+
+---
+
+## ⑧ データベースとテーブルの違い
+
+今回のデータ構造は次のとおり。
+
+```text
+clans_practice.db
+    └── clans
+         ├── id
+         └── name
+```
+
+- `clans_practice.db`：データベースファイル
+- `clans`：その中に作るテーブル
+- `id`：クランの識別番号
+- `name`：クラン名
+
+Excelに例えると、データベースファイルがブック、テーブルが表に近い。
+
+CREATE TABLEで表を作っただけでは、具体的なクラン情報はまだ登録されない。
+
+---
+
+## ⑨ テーブルの存在確認
+
+今日は、実際に `clans` テーブルが存在するかを確認した。
+
+### 確認用コード
+
+```python
+result = conn.execute(
+    "SELECT name FROM sqlite_master WHERE type='table' AND name='clans'"
+).fetchone()
+
+print(result)
+```
+
+※ DB接続が開いている状態で実行する。
+
+### 実行結果
+
+```python
+('clans',)
+```
+
+この結果から、`clans` テーブルが存在することを確認できた。
+
+### 確認用コードの意味
+
+- `sqlite_master`：SQLiteのテーブルなどの構造情報を管理する仕組み
+- `SELECT`：必要な情報を取得する
+- `fetchone()`：検索結果から1行取得する
+
+**この確認用コードは、現段階では暗記不要。**
+
+今日の重要な成果は、PythonからSQLiteに接続し、テーブルを作成できたことである。
+
+---
+
+## ⑩ CREATE TABLEとINSERTの違い
+
+今日、理解が不十分だった最も重要な部分。
+
+### CREATE TABLE
+
+```sql
+CREATE TABLE IF NOT EXISTS clans (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL
+);
+```
+
+これは、データを保存するための表を作る命令。
+
+例えば、次の列を用意する。
+
+| id | name |
+|---|---|
+| | |
+
+この段階では、まだ具体的なクランは登録されていない。
+
+### INSERT
+
+```sql
+INSERT INTO clans (name)
+VALUES ('AI研究会');
+```
+
+これは、既に作成されたテーブルに新しいデータを登録する命令。
+
+実行して保存すると、例えば次のようになる。
+
+| id | name |
+|---|---|
+| 1 | AI研究会 |
+
+### 重要な違い
+
+| SQL | 役割 |
+|---|---|
+| `CREATE TABLE` | テーブルの構造を作る |
+| `INSERT` | テーブルにデータを登録する |
+| `SELECT` | 登録されたデータを取得する |
+
+今日の最後の問題では、CREATE TABLEによって「AI研究会」が登録されると回答した。
+
+しかし、**CREATE TABLEは表を用意するだけで、実際のデータ登録にはINSERTが必要**である。
+
+この違いは、次回最優先で復習する。
+
+---
+
+## ⑪ 今日の理解度と成果
+
+| 学習内容 | 評価 | 状況 |
+|---|---|---|
+| 関数・引数・return | ○ | 基本的な役割を復習 |
+| 辞書を返す関数 | ○〜◎ | 修正後に実装 |
+| 辞書から値を取得 | ◎ | 実行成功 |
+| VS Codeでの保存・実行 | ○ | 保存忘れへの対策が必要 |
+| SQLiteへの接続 | ○ | 実行成功、仕組みを復習 |
+| CREATE TABLEの実行 | ◎ | テーブル作成を確認 |
+| INTEGER・TEXTなどの意味 | △ | 学習開始、復習が必要 |
+| CREATE TABLEとINSERTの違い | △ | 理解を強化する必要あり |
+| INSERTによるデータ登録 | 未実施 | 次回へ持ち越し |
+| SELECTによる登録データ確認 | 未実施 | 次回へ持ち越し |
+
+### 今日できるようになったこと
+
+Pythonの関数で辞書を作り、returnで返し、その辞書から必要な値を取り出せた。
+
+さらに、SQLiteに接続してクラン情報を保存するためのテーブルを作成し、実際に存在することを確認できた。
+
+**Pythonのプログラム内でデータを扱う段階から、データベースを準備する段階まで進んだ。**
+
+---
+
+## ⑫ 次回の学習内容
+
+次回は `db_practice.py` と `clans_practice.db` を引き続き使用する。
+
+### 第1段階：CREATE TABLEの復習
+
+- テーブルとは何か
+- INTEGER・TEXTの意味
+- PRIMARY KEYの役割
+- NOT NULLの意味
+
+### 第2段階：INSERT
+
+```sql
+INSERT INTO clans (name)
+VALUES ('AI研究会');
+```
+
+実際にクラン情報を登録する。
+
+### 第3段階：SELECT
+
+```sql
+SELECT *
+FROM clans;
+```
+
+登録されたデータを取得し、本当に保存されたことを確認する。
+
+### 第4段階：PythonとSQLiteの接続を整理
+
+- `connect()`
+- `execute()`
+- `commit()`
+- `fetchone()` / `fetchall()`
+- `close()`
+
+それぞれの処理を自分の言葉で説明できるようにする。
+
+### 第5段階：FastAPIへの接続
+
+SQL・SQLiteの仕組みを理解できた段階で、PythonのDB関数をFastAPIから呼び出す練習へ進む。
+
+---
+
+## ⑬ 11月の学習方針
+
+今後もVS Codeを中心に、Python・SQL・SQLite・FastAPI・Pydanticの基礎を定着させる。
+
+特に、**コードを実行できることと、そのコードの意味を理解できることを区別する。**
+
+学習は次の順番で進める。
+
+1. コードの役割を理解する
+2. 自分でコードを書く
+3. VS Codeで保存する
+4. 実際に実行する
+5. 実行結果を確認する
+6. 自分の言葉で処理を説明する
+
+Git・GitHubも、実際に作ったコードを管理する形で継続的に活用する。
+
+将来的にはpytest・Docker・PostgreSQLへ発展させ、友達とのマッチング・クランアプリの共同開発に応用する。
+
+さらに、2027年10月のEpistra長期インターンを目指し、実践的なバックエンド開発力を身につける。
+
+長期的な進路目標は、HondaでAI・ロボティクスの開発に携わること。
+
+⑭ 今日のまとめ
+
+今日の最大の成果は、VS Codeを使ってPythonからSQLiteに接続し、実際にクラン用テーブルを作成できたことである。
+
+一方で、CREATE TABLEの各構文の意味や、CREATE TABLEとINSERTの違いはまだ十分に理解できていない。
+
+これは次回、実際にデータを登録・取得することで理解を深める。
+
+次回は新しい技術を増やさず、「テーブルを作る → データを登録する → データを取得する」というデータベースの基本的な流れを確実に理解する。
