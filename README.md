@@ -6046,3 +6046,332 @@ Git・GitHubも、実際に作ったコードを管理する形で継続的に�
 これは次回、実際にデータを登録・取得することで理解を深める。
 
 次回は新しい技術を増やさず、「テーブルを作る → データを登録する → データを取得する」というデータベースの基本的な流れを確実に理解する。
+
+11月8日｜Python・SQL・FastAPI 基礎復習レジュメ
+
+① 今日の学習概要
+
+今日はスマートフォンを使用し、これまで学習したPython・SQL・SQLite・FastAPI・Pydanticの基礎を検索練習（記憶から思い出す練習）で復習した。
+
+特に、前回理解が不十分だった CREATE TABLEとINSERTの違い、Pythonの関数・辞書・return、Pydanticの変数・モデル・項目名の区別を重点的に確認した。
+
+今日の学習目標
+
+* SQLでテーブルを作る仕組みを理解する
+* INSERTを自力で書けるようにする
+* Pythonの関数と辞書の戻り値を理解する
+* Pydanticのモデル・変数・項目名を区別する
+
+⸻
+
+② SQL｜CREATE TABLEの復習
+
+次のSQLについて学習した。
+
+CREATE TABLE IF NOT EXISTS clans (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL
+);
+
+各部分の意味
+
+SQL	意味
+CREATE TABLE	新しいテーブル（表）を作る
+IF NOT EXISTS	同じ名前のテーブルが存在しない場合だけ作る
+clans	テーブル名
+id	クランを識別する番号の列
+INTEGER	整数型
+PRIMARY KEY	各行を一意に識別する主キー
+name	クラン名を保存する列
+TEXT	文字列を保存する型
+NOT NULL	NULL値を禁止する
+
+今日の回答
+
+① CREATE TABLE の役割
+
+回答：テーブル・表を作る
+
+正解。
+
+② INTEGER PRIMARY KEY の意味
+
+回答：分からない
+
+正解：整数型の主キーを設定する。
+
+INTEGER は整数型、PRIMARY KEY は各データを一意に識別するための制約。
+
+例えば、クランごとに異なるIDを持たせる。
+
+id	name
+1	AI研究会
+2	ゲーム制作部
+3	読書クラブ
+
+SQLiteでは、id INTEGER PRIMARY KEY と定義すると、IDを省略して登録した際に番号が自動的に割り当てられる。
+
+③ CREATE TABLEで「AI研究会」は登録されるか
+
+回答：登録されない
+
+正解。
+
+前回は間違えていたが、今回は正しく理解できた。
+
+重要なポイント
+
+CREATE TABLEは、データを保存するための表を作る命令。
+
+実際のデータを登録する命令ではない。
+
+⸻
+
+③ SQL｜INSERTとVALUES
+
+新しいクランを登録するSQLの穴埋めを行った。
+
+① INTO clans (name)
+② ('AI研究会');
+
+回答：
+
+① INSERT
+
+② VALUES
+
+両方とも正解。
+
+完成したSQL
+
+INSERT INTO clans (name)
+VALUES ('AI研究会');
+
+コードの意味
+
+SQL	意味
+INSERT INTO	データを登録するテーブルを指定する
+clans	登録先のテーブル
+(name)	値を登録する列
+VALUES	登録する値を指定する
+'AI研究会'	登録する文字列
+
+このSQLを実行し、変更を確定すると、データベースに新しいクランが保存される。
+
+CREATE TABLEとINSERTの違い
+
+* CREATE TABLE：表の構造を作る
+* INSERT：表に新しいデータを登録する
+* SELECT：登録されたデータを取得する
+
+今日はINSERTとVALUESを自力で思い出せた。
+
+⸻
+
+④ Python｜関数・引数・returnの復習
+
+次のコードについて、処理結果を予測した。
+
+def get_clan(name):
+    return {
+        "name": name,
+        "status": "active"
+    }
+result = get_clan("ゲーム制作部")
+
+今日の回答
+
+① name に入る値
+
+"ゲーム制作部"
+
+正解。
+
+② result に入る辞書
+
+{
+    "name": "ゲーム制作部",
+    "status": "active"
+}
+
+正解。
+
+処理の流れ
+
+1. get_clan("ゲーム制作部") で関数を呼び出す。
+2. 引数 name に "ゲーム制作部" が入る。
+3. return で辞書全体を返す。
+4. 戻り値が result に入る。
+
+重要な理解
+
+コード	役割
+def	関数を定義する
+name	引数を受け取る変数
+return	呼び出し元へ値を返す
+{}	辞書を作る
+"name"	辞書のキー
+"active"	固定の文字列
+result	戻り値を受け取る変数
+
+これまで間違えやすかった、変数と辞書を組み合わせてreturnする処理を正しく回答できた。
+
+⸻
+
+⑤ FastAPI・Pydanticの復習
+
+次のコードについて学習した。
+
+class ClanCreate(BaseModel):
+    name: str
+@app.post("/clans")
+def create_clan_api(data: ClanCreate):
+    return save_clan(data.name)
+
+今日の回答
+
+問題	回答	評価
+data の意味	データ	△
+ClanCreate の意味	入力	○
+data.name の意味	名前を入れる	△
+
+正しい理解
+
+① data
+
+入力データを受け取る変数。
+
+② ClanCreate
+
+Pydanticのモデル。
+
+どのような項目・データ型を受け取るかを定義する。
+
+③ data.name
+
+入力データから、name という項目の値を取り出す。
+
+例えば、次のデータを受け取る。
+
+{"name": "AI研究会"}
+
+この場合、
+
+data.name
+
+で "AI研究会" を取得できる。
+
+変数・モデル・項目名・型の違い
+
+コード	役割
+data	入力データを受け取る変数
+ClanCreate	Pydanticモデル
+name	データの項目名
+str	文字列型
+data.name	name 項目の値を取得
+
+今日の重要な課題
+
+data.name は「名前を入れる」という意味ではなく、既に受け取ったデータから名前を取り出す処理。
+
+この違いは、引き続き復習する必要がある。
+
+⸻
+
+⑥ FastAPIからDB関数を呼び出す仕組み
+
+@app.post("/clans")
+def create_clan_api(data: ClanCreate):
+    return save_clan(data.name)
+
+このコードでは、次の流れで処理する。
+
+1. FastAPIがPOSTリクエストを受け取る。
+2. Pydanticが入力データを検証する。
+3. data.name でクラン名を取得する。
+4. save_clan() にクラン名を渡す。
+5. DB関数の処理結果を return で返す。
+
+※ DBへの保存は、save_clan() の中に適切なSQL処理が実装されていることが前提。
+
+重要なポイント
+
+FastAPI・Pydantic・SQLは、それぞれ役割が違う。
+
+* FastAPI：HTTPリクエストの受付とレスポンスの返却
+* Pydantic：入力データの形式や値の検証
+* PythonのDB関数：データベース処理の制御
+* SQL：実際のデータ操作
+* SQLite：データの保存・管理
+
+⸻
+
+⑦ 今日の理解度評価
+
+学習内容	評価	状況
+CREATE TABLEの役割	◎	正しく説明できた
+INTEGER PRIMARY KEY	△	復習が必要
+CREATE TABLEとINSERTの違い	◎	前回から改善
+INSERT・VALUESの記述	◎	自力で正解
+Pythonの関数・引数	◎	正しく回答
+辞書とreturn	◎	辞書全体を記述できた
+Pydanticのモデル	○	基本的な役割は把握
+変数と項目名の区別	△	まだ曖昧
+FastAPIとDBの接続	復習中	今後の実装で確認
+
+今日の成果
+
+最も大きな進歩は、CREATE TABLEとINSERTの違いを理解し、INSERTのコードを自力で思い出せたこと。
+
+また、Pythonの関数で辞書を返す問題にも正確に回答できた。
+
+一方、PRIMARY KEYの意味とPydanticの項目の取り出し方には課題が残った。
+
+⸻
+
+⑧ 次回の学習内容
+
+次回はVS Codeを使用し、前回作成した db_practice.py と clans_practice.db の続きから学習する。
+
+優先順位
+
+1. INTEGER PRIMARY KEY の復習
+2. INSERT で「AI研究会」を実際に登録する
+3. SELECT で保存されたデータを確認する
+4. Pythonの execute()・commit()・fetchall() を復習する
+5. Pydanticの変数・型・項目名の違いを確認する
+6. 進捗に応じてFastAPIとGit・GitHubを実践する
+
+次回の目標
+
+「表を作る → データを登録する → 保存された内容を取得する」という一連の流れを、VS Codeで自力実装すること。
+
+コードを実行するだけでなく、なぜその処理が必要なのかを説明できる状態を目指す。
+
+⸻
+
+⑨ 今後の学習方針
+
+11月はPython・SQL・SQLite・FastAPI・Pydanticの基礎強化を継続する。
+
+VS Codeで実際にコードを書き、動作確認しながら理解を深める。
+
+また、Git・GitHubを活用してコードの変更履歴を管理し、将来的にはpytest・Docker・PostgreSQLへ発展させる。
+
+友達とのマッチング・クランアプリ共同開発では、Python・FastAPI・SQLを中心とするバックエンドを担当できるようになることを目指す。
+
+2027年10月のEpistra長期インターンに向けて実践経験を積み、長期的にはHondaのAI・ロボティクス開発職への就職につなげる。
+
+⸻
+
+⑩ 今日のまとめ
+
+今日の学習では、SQLのテーブル作成とデータ登録の違い、Pythonの関数・辞書・returnの理解が進んだ。
+
+特に、以前間違えていた内容を正しく思い出せた点は成果だった。
+
+一方、PRIMARY KEYやPydanticの変数・モデル・項目名の区別は、まだ十分に定着していない。
+
+次回はこの弱点を復習しながら、VS Codeで実際にクラン情報を登録・取得する練習へ進む。
+
+11月は新しい技術を急いで増やさず、既習内容を自分で説明・実装できる状態にすることを最優先とする。
